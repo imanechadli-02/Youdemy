@@ -69,3 +69,13 @@ CREATE Table Cours_etudiant(
     FOREIGN KEY (etudiant_id) REFERENCES Etudiant(etudiant_id),
     PRIMARY KEY (cours_id, etudiant_id)
 );
+
+
+
+CREATE table mesCourses(
+    lib_id INT AUTO_INCREMENT PRIMARY KEY,
+    cours_id INT NOT NULL,
+    etudiant_id INT NOT NULL,
+    FOREIGN KEY (cours_id) REFERENCES Cours(cours_id),
+    FOREIGN KEY (etudiant_id) REFERENCES Etudiant(etudiant_id)
+);

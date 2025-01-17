@@ -1,9 +1,29 @@
+<?php 
+require_once '../config/config.php';
+require '../classes/UserClass.php';
+
+session_start();
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $username = trim($_POST['username']);
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+    $role = $_POST['role'];
+
+    $user = new User($username, $email, $password, $role);
+    $user->signup();
+}
+
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - EduLearn Platform</title>
+    <title>Sign Up - Youdemy Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
@@ -219,7 +239,7 @@
 <body>
     <div class="page-container">
         <div class="info-section">
-            <h2>Join EduLearn Today</h2>
+            <h2>Join Youdemy Today</h2>
             <p>Start your learning journey with us</p>
             
             <div class="benefits-list">
@@ -248,7 +268,7 @@
                 <p>Join our learning community today</p>
             </div>
 
-            <form action="processSignUp.php" method="POST">
+            <form action="" method="POST">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" required>
@@ -271,8 +291,9 @@
                     <label for="role">I want to</label>
                     <select id="role" name="role" required>
                         <option value="" disabled selected>Select your role</option>
-                        <option value="student">Learn as a Student</option>
-                        <option value="teacher">Teach as an Instructor</option>
+                        <option value="enseignant">enseignant</option>
+                        <option value="admin">admin</option>
+                        <option value="etudiant">etudiant</option>
                     </select>
                     <i class="fas fa-user-graduate"></i>
                 </div>

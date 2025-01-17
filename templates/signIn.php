@@ -1,3 +1,21 @@
+<?php 
+require_once '../config/config.php';
+require '../classes/UserClass.php';
+
+session_start();
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+    $user = new User();
+    $user->signIn();
+    header("location : index.php");
+}
+
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -311,10 +329,10 @@
                 <p>Continue your learning journey</p>
             </div>
 
-            <form action="processSignIn.php" method="POST">
+            <form action="" method="POST">
                 <div class="form-group">
                     <label for="username">Username or Email</label>
-                    <input type="text" id="username" name="username" required>
+                    <input type="text" id="username" name="email" required>
                     <i class="fas fa-user"></i>
                 </div>
                 
