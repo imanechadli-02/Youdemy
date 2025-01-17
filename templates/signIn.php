@@ -1,16 +1,26 @@
-<?php 
+<?php
 require_once '../config/config.php';
 require '../classes/UserClass.php';
 
 session_start();
 
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = trim($_POST['email']);
-    $password = trim($_POST['password']);
-    $user = new User();
+    $email = isset($_POST['email']) ? trim($_POST['email']) : '';
+    $password = isset($_POST['password']) ? trim($_POST['password']) : '';
+
+
+    $user = new User('', $email, $password, '');
+
     $user->signIn();
-    header("location : index.php");
+
+    // header("Location: ../index.php");
+    exit();
 }
+
+
+
 
 
 
@@ -18,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -286,7 +297,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             .page-container {
                 flex-direction: column;
             }
-            
+
             .info-section {
                 padding: 32px;
             }
@@ -297,12 +308,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     </style>
 </head>
+
 <body>
     <div class="page-container">
         <div class="info-section">
             <h2>Welcome to Youdemy</h2>
             <p>Your gateway to knowledge and skills</p>
-            
+
             <div class="platform-features">
                 <div class="feature-item">
                     <i class="fas fa-graduation-cap"></i>
@@ -331,11 +343,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             <form action="" method="POST">
                 <div class="form-group">
-                    <label for="username">Username or Email</label>
+                    <label for="email">Username or Email</label>
                     <input type="text" id="username" name="email" required>
                     <i class="fas fa-user"></i>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required>
@@ -351,7 +363,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <a href="forgot-password.php">Forgot Password?</a>
                     </div>
                 </div>
-                
+
                 <button type="submit" class="signin-button">
                     Sign In <i class="fas fa-arrow-right"></i>
                 </button>
@@ -377,4 +389,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </div>
 </body>
+
 </html>

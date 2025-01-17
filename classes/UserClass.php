@@ -95,7 +95,7 @@ class User
                     INSERT INTO Users (username, email, password, role)
                     VALUES (?, ?, ?, ?)
                 ");
-                
+
 
                 $stmt->bind_param("ssss", $username, $email, $hashedPassword, $role);
 
@@ -103,8 +103,7 @@ class User
                     echo "<script>alert('Inscription réussie. Vous pouvez maintenant vous connecter.')</script>";
                 } else {
                     echo "<script>alert('Erreur lors de l'inscription.')</script> " . $stmt->error;
-                
-            }
+                }
 
                 $stmt->close();
             } catch (Exception $e) {
@@ -118,36 +117,37 @@ class User
 
     public function signIn()
     {
-        $username = $this->getUsername();
+        $email = $this->getEmail();
         $password = $this->getPassword();
-
-        if (empty($username) || empty($password)) {
-            echo "<script>alert('Nom d\'utilisateur et mot de passe sont obligatoires.');</script>";
-            return;
-        }
 
         $dbConnection = (new Connection())->getConnection();
 
         if ($dbConnection) {
             try {
-                // Check if the username exists
-                $stmt = $dbConnection->prepare("SELECT * FROM users WHERE username = ?");
-                $stmt->bind_param("s", $username);
+                $stmt = $dbConnection->prepare("SELECT * FROM users WHERE email = ?");
+                $stmt->bind_param("s", $email);
                 $stmt->execute();
                 $result = $stmt->get_result();
 
                 if ($result->num_rows > 0) {
                     $user = $result->fetch_assoc();
-                    
-                    // Verify the password
+
                     if (password_verify($password, $user['password'])) {
-                        // Start session and store user data
-                        session_start();
+                        session_start();  
+
                         $_SESSION['user_id'] = $user['id'];
                         $_SESSION['username'] = $user['username'];
                         $_SESSION['role'] = $user['role'];
 
-                        echo "<script>alert('Connexion réussie. Bienvenue!');</script>";
+                        if ($user['role'] == 'admin') {
+                            header("Location: ../AdminPages/DashboardAdmin.php");
+                        } else if ($user['role'] == 'enseignant') {
+                            header("Location: ../EnseignantPages/DashboardEnseignant.php");
+                            exit();
+                        } else {
+                            header("Location: ../EtudiantPages/DashboardEtudiant.php");
+                            exit();
+                        }
                     } else {
                         echo "<script>alert('Mot de passe incorrect.');</script>";
                     }
@@ -164,9 +164,3 @@ class User
         }
     }
 }
-
-
-?>
-
-
-
