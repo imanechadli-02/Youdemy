@@ -13,9 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user = new User($username, $email, $password, $role);
     $user->signup();
 }
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -25,300 +22,120 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - Youdemy Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            background: linear-gradient(120deg, #0f172a 0%, #1e1b4b 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .page-container {
-            display: flex;
-            max-width: 1000px;
-            width: 100%;
-            margin: 20px;
-            background: rgba(30, 41, 59, 0.95);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .info-section {
-            flex: 1;
-            background: rgba(15, 23, 42, 0.95);
-            padding: 40px;
-            color: #e2e8f0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .benefits-list {
-            margin-top: 30px;
-        }
-
-        .benefit-item {
-            display: flex;
-            align-items: center;
-            margin: 15px 0;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            transition: transform 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .benefit-item:hover {
-            transform: translateX(10px);
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .benefit-item i {
-            margin-right: 15px;
-            font-size: 20px;
-            color: #8b5cf6;
-        }
-
-        .signup-section {
-            flex: 1;
-            padding: 40px;
-            background: rgba(30, 41, 59, 0.95);
-        }
-
-        .signup-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .signup-header h2 {
-            color: #e2e8f0;
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        .signup-header p {
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #e2e8f0;
-            font-weight: 500;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 12px 40px 12px 15px;
-            background: rgba(15, 23, 42, 0.95);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            color: #e2e8f0;
-        }
-
-        .form-group i {
-            position: absolute;
-            right: 15px;
-            top: 40px;
-            color: #8b5cf6;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: #8b5cf6;
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
-            outline: none;
-        }
-
-        .signup-button {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(to right, #6d28d9, #8b5cf6);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .signup-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
-        }
-
-        .social-signup {
-            margin-top: 30px;
-            text-align: center;
-        }
-
-        .social-signup p {
-            color: #94a3b8;
-            margin-bottom: 15px;
-            position: relative;
-        }
-
-        .social-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-
-        .social-button {
-            padding: 10px 20px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            background: rgba(15, 23, 42, 0.95);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #e2e8f0;
-        }
-
-        .social-button:hover {
-            border-color: #8b5cf6;
-            background: rgba(139, 92, 246, 0.1);
-        }
-
-        .signin-link {
-            text-align: center;
-            margin-top: 20px;
-            color: #94a3b8;
-        }
-
-        .signin-link a {
-            color: #8b5cf6;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .signin-link a:hover {
-            color: #9f7aea;
-        }
-
-        /* Style for select options */
-        select option {
-            background: #1e1b4b;
-            color: #e2e8f0;
-        }
-
-        @media (max-width: 768px) {
-            .page-container {
-                flex-direction: column;
-            }
-            
-            .info-section {
-                padding: 20px;
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8b5cf6',
+                        'primary-dark': '#6d28d9',
+                        background: '#0f172a',
+                        'background-dark': '#1e1b4b',
+                        surface: '#1e293b',
+                    },
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
+                    },
+                }
             }
         }
-    </style>
+    </script>
 </head>
-<body>
-    <div class="page-container">
-        <div class="info-section">
-            <h2>Join Youdemy Today</h2>
-            <p>Start your learning journey with us</p>
+
+<body class="bg-gradient-to-br from-background to-background-dark min-h-screen flex justify-center items-center p-5 font-poppins">
+    <div class="flex max-w-[1000px] w-full mx-5 bg-surface/95 rounded-[20px] overflow-hidden shadow-2xl border border-white/10 md:flex-row flex-col">
+        <!-- Info Section -->
+        <div class="flex-1 bg-background/95 p-10 text-gray-200 flex flex-col justify-center">
+            <h2 class="text-2xl font-bold">Join Youdemy Today</h2>
+            <p class="text-gray-400">Start your learning journey with us</p>
             
-            <div class="benefits-list">
-                <div class="benefit-item">
-                    <i class="fas fa-book-reader"></i>
+            <div class="mt-8 space-y-4">
+                <div class="flex items-center p-3 bg-white/5 rounded-lg border border-white/10 transition-transform duration-300 hover:translate-x-2.5 hover:bg-white/10">
+                    <i class="fas fa-book-reader text-xl text-primary mr-4"></i>
                     <span>Personalized learning paths</span>
                 </div>
-                <div class="benefit-item">
-                    <i class="fas fa-video"></i>
+                <div class="flex items-center p-3 bg-white/5 rounded-lg border border-white/10 transition-transform duration-300 hover:translate-x-2.5 hover:bg-white/10">
+                    <i class="fas fa-video text-xl text-primary mr-4"></i>
                     <span>HD video courses</span>
                 </div>
-                <div class="benefit-item">
-                    <i class="fas fa-comments"></i>
+                <div class="flex items-center p-3 bg-white/5 rounded-lg border border-white/10 transition-transform duration-300 hover:translate-x-2.5 hover:bg-white/10">
+                    <i class="fas fa-comments text-xl text-primary mr-4"></i>
                     <span>Interactive community</span>
                 </div>
-                <div class="benefit-item">
-                    <i class="fas fa-mobile-alt"></i>
+                <div class="flex items-center p-3 bg-white/5 rounded-lg border border-white/10 transition-transform duration-300 hover:translate-x-2.5 hover:bg-white/10">
+                    <i class="fas fa-mobile-alt text-xl text-primary mr-4"></i>
                     <span>Learn on any device</span>
                 </div>
             </div>
         </div>
 
-        <div class="signup-section">
-            <div class="signup-header">
-                <h2>Create Account</h2>
-                <p>Join our learning community today</p>
+        <!-- Sign Up Section -->
+        <div class="flex-1 p-10 bg-surface/95">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-200 mb-2">Create Account</h2>
+                <p class="text-gray-400">Join our learning community today</p>
             </div>
 
-            <form action="" method="POST">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required>
-                    <i class="fas fa-user"></i>
+            <form action="" method="POST" class="space-y-6">
+                <div class="relative">
+                    <label for="username" class="block mb-2 text-gray-200 font-medium">Username</label>
+                    <input type="text" id="username" name="username" required
+                        class="w-full px-4 py-3 bg-background/95 border-2 border-white/10 rounded-lg text-gray-200 transition-all duration-300 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10">
+                    <i class="fas fa-user absolute right-4 top-[45px] text-primary"></i>
                 </div>
 
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" required>
-                    <i class="fas fa-envelope"></i>
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
-                    <i class="fas fa-lock"></i>
+                <div class="relative">
+                    <label for="email" class="block mb-2 text-gray-200 font-medium">Email Address</label>
+                    <input type="email" id="email" name="email" required
+                        class="w-full px-4 py-3 bg-background/95 border-2 border-white/10 rounded-lg text-gray-200 transition-all duration-300 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10">
+                    <i class="fas fa-envelope absolute right-4 top-[45px] text-primary"></i>
                 </div>
 
-                <div class="form-group">
-                    <label for="role">I want to</label>
-                    <select id="role" name="role" required>
+                <div class="relative">
+                    <label for="password" class="block mb-2 text-gray-200 font-medium">Password</label>
+                    <input type="password" id="password" name="password" required
+                        class="w-full px-4 py-3 bg-background/95 border-2 border-white/10 rounded-lg text-gray-200 transition-all duration-300 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10">
+                    <i class="fas fa-lock absolute right-4 top-[45px] text-primary"></i>
+                </div>
+
+                <div class="relative">
+                    <label for="role" class="block mb-2 text-gray-200 font-medium">I want to</label>
+                    <select id="role" name="role" required
+                        class="w-full px-4 py-3 bg-background/95 border-2 border-white/10 rounded-lg text-gray-200 transition-all duration-300 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10 appearance-none">
                         <option value="" disabled selected>Select your role</option>
                         <option value="enseignant">enseignant</option>
                         <option value="admin">admin</option>
                         <option value="etudiant">etudiant</option>
                     </select>
-                    <i class="fas fa-user-graduate"></i>
+                    <i class="fas fa-user-graduate absolute right-4 top-[45px] text-primary"></i>
                 </div>
-                
-                <button type="submit" class="signup-button">
+
+                <button type="submit" 
+                    class="w-full py-3 bg-gradient-to-r from-primary-dark to-primary text-white rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/25">
                     Create Account <i class="fas fa-arrow-right"></i>
                 </button>
             </form>
 
-            <div class="social-signup">
-                <p>Or sign up with</p>
-                <div class="social-buttons">
-                    <button class="social-button">
+            <div class="mt-8 text-center">
+                <p class="text-gray-400 mb-4">Or sign up with</p>
+                <div class="flex justify-center gap-4">
+                    <button class="px-6 py-2.5 border-2 border-white/10 rounded-lg bg-background/95 text-gray-200 hover:border-primary hover:bg-primary/10 transition-all duration-300 flex items-center gap-2">
                         <i class="fab fa-google"></i>
                         Google
                     </button>
-                    <button class="social-button">
+                    <button class="px-6 py-2.5 border-2 border-white/10 rounded-lg bg-background/95 text-gray-200 hover:border-primary hover:bg-primary/10 transition-all duration-300 flex items-center gap-2">
                         <i class="fab fa-github"></i>
                         GitHub
                     </button>
                 </div>
             </div>
 
-            <div class="signin-link">
-                Already have an account? <a href="signIn.php">Sign In</a>
+            <div class="text-center mt-6 text-gray-400">
+                Already have an account? 
+                <a href="signIn.php" class="text-primary hover:text-primary-dark font-semibold transition-colors duration-300">
+                    Sign In
+                </a>
             </div>
         </div>
     </div>
