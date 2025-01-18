@@ -1,12 +1,26 @@
 <?php
 require_once '../config/config.php';
-require_once '../classes/UserClass.php';
-
+require_once '../classes/AdminClass.php';
 session_start();
+
+$user = new Admin();
+// echo "sdfghjkl";die();
+
+$users = $user->getAllUsers();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $userId = $_POST['userId'];
+    $status = $_POST['status'];
+
+    // $user = new User();
+    $user->changeStatus($userId, $status);
+}
+
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -111,34 +125,50 @@ session_start();
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="border-b border-white/10">
-                                <td class="p-4">
-                                    <div class="flex items-center gap-3">
-                                        <i class="fas fa-user text-primary"></i>
-                                        <span>John Doe</span>
-                                    </div>
-                                </td>
-                                <td class="p-4">Student</td>
-                                <td class="p-4">
-                                    <span class="px-3 py-1 text-sm bg-green-500/20 text-green-400 rounded-full">
-                                        Active
-                                    </span>
-                                </td>
-                                <td class="p-4">
-                                    <div class="flex items-center gap-4">
-                                        <select class="w-[120px] bg-surface-light text-white px-4 py-2 rounded-lg border border-white/10 focus:outline-none focus:border-primary">
-                                            <option value="" disabled selected>Action</option>
-                                            <option value="activate">Activate</option>
-                                            <option value="deactivate">Deactivate</option>
-                                            <option value="suspend">Suspend</option>
-                                        </select>
-                                        <button class="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-all duration-300">
-                                            <i class="fas fa-trash-alt"></i>
-                                            Delete
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                            <?php foreach ($users as $user) : ?>
+                                <tr class="border-b border-white/10">
+                                    <td class="p-4">
+                                        <div class="flex items-center gap-3">
+                                            <i class="fas fa-user text-primary"></i>
+                                            <span><?= htmlspecialchars($user['username']) ?> </span>
+                                        </div>
+                                    </td>
+                                    <td class="p-4"><?= htmlspecialchars($user['role']) ?></td>
+                                    <td class="p-4">
+                                        <?php
+                                        $statusColor = match ($user['status']) {
+                                            'active' => 'green',
+                                            'suspendue' => 'red',
+                                                // 'pending' => 'orange',
+                                            default => 'yellow'
+                                        };
+                                        ?>
+                                        <span class="px-3 py-1 text-sm bg-<?= $statusColor ?>-500/10 text-<?= $statusColor ?>-400 rounded-full">
+                                            <?= htmlspecialchars($user['status']) ?>
+                                        </span>
+                                    </td>
+                                    <td class="p-4">
+                                        <div class="flex items-center gap-4">
+
+                                            <form action="" method="POST">
+                                                <input type="hidden" name="userId" value="<?= $user['users_id'] ?>">
+                                                <select name="status" class="bg-purple-500/10 border border-purple-500/20 rounded-xl px-3 py-1 text-sm 
+                                                    focus:outline-none focus:border-purple-500/50 text-white" onchange="this.form.submit()">
+                                                    <option value="" class="bg-slate-900 text-white" selected disabled>Actions</option>
+                                                    <option value="active" class="bg-slate-900 text-white">active</option>
+                                                    <option value="suspendue" class="bg-slate-900 text-white">suspendue</option>
+                                                    <!-- <option value="deleted" class="bg-slate-900 text-white">Delete</option>
+                                                    <option value="pending" class="bg-slate-900 text-white">pending</option> -->
+                                                </select>
+                                            </form>
+                                            <button name="delete" class="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-all duration-300">
+                                                <i class="fas fa-trash-alt"></i>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach ?>
                         </tbody>
                     </table>
                 </div>
@@ -146,4 +176,5 @@ session_start();
         </div>
     </div>
 </body>
+
 </html>

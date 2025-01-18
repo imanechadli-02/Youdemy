@@ -9,7 +9,7 @@ class User
     private $password;
     private $role;
 
-    public function __construct($username, $email, $password, $role)
+    public function __construct($username = null , $email = null, $password = null, $role = null)
     {
         $this->username = $username;
         $this->email = $email;
@@ -133,7 +133,7 @@ class User
                     $user = $result->fetch_assoc();
 
                     if (password_verify($password, $user['password'])) {
-                        session_start();  
+                        session_start();
 
                         $_SESSION['user_id'] = $user['id'];
                         $_SESSION['username'] = $user['username'];

@@ -9,6 +9,9 @@ CREATE Table Users(
     role ENUM('admin', 'etudiant', 'enseignant') DEFAULT 'etudiant'
 );
 
+ALTER Table users
+ADD COLUMN  status ENUM('active', 'suspendue') DEFAULT 'active';
+
 CREATE Table Admin(
     admin_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(100) NOT NULL,
