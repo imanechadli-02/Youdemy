@@ -133,18 +133,24 @@ class User
                     $user = $result->fetch_assoc();
 
                     if (password_verify($password, $user['password'])) {
-                        session_start();
+                        // session_start();
 
-                        $_SESSION['user_id'] = $user['id'];
+                        $_SESSION['user_id'] = $user['user_id'];
                         $_SESSION['username'] = $user['username'];
                         $_SESSION['role'] = $user['role'];
+                        $_SESSION['status'] = $user['status'];
 
                         if ($user['role'] == 'admin') {
                             header("Location: ../AdminPages/DashboardAdmin.php");
-                        } else if ($user['role'] == 'enseignant') {
+                            exit(); // Ensure script stops after redirection
+                        } elseif ($user['role'] == 'enseignant' && $user['status'] == 'active') {
                             header("Location: ../EnseignantPages/DashboardEnseignant.php");
                             exit();
+                        } elseif ($user['role'] == 'enseignant' && $user['status'] != 'active') {
+                            echo "<script>alert('Attendez l\'activation de votre compte');</script>";
+                            exit(); // Optional: you can stop the script after showing the alert
                         } else {
+                            // If the role is not 'admin' or 'enseignant'
                             header("Location: ../EtudiantPages/DashboardEtudiant.php");
                             exit();
                         }

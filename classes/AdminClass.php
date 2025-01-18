@@ -91,29 +91,28 @@ class Admin
 
 
     public function changeStatus($id, $status)
-{
-    $dbConnection = (new Connection)->getConnection(); 
+    {
+        $dbConnection = (new Connection)->getConnection();
 
-    $query = 'UPDATE users SET status = ? WHERE user_id = ?';
+        $query = 'UPDATE users SET status = ? WHERE user_id = ?';
 
-    $stmt = $dbConnection->prepare($query);
+        $stmt = $dbConnection->prepare($query);
 
-    if (!$stmt) {
-        die('Prepare failed: ' . $dbConnection->error); 
+        if (!$stmt) {
+            die('Prepare failed: ' . $dbConnection->error);
+        }
+
+        $stmt->bind_param('si', $status, $id);
+
+        if ($stmt->execute()) {
+            echo 'Status updated successfully';
+            // header ('location : ../AdminPages/users.php');
+        } else {
+            echo 'Error updating status: ' . $stmt->error;
+        }
+
+        $stmt->close();
+
+        $dbConnection->close();
     }
-
-    $stmt->bind_param('si', $status, $id);
-
-    if ($stmt->execute()) {
-        // echo 'Status updated successfully';
-        header ('location : ../AdminPages/DashboardAdmin.php');
-    } else {
-        echo 'Error updating status: ' . $stmt->error;
-    }
-
-    $stmt->close();
-
-    $dbConnection->close();
-}
-
 }

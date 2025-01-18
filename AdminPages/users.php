@@ -151,16 +151,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <div class="flex items-center gap-4">
 
                                             <form action="" method="POST">
-                                                <input type="hidden" name="userId" value="<?= $user['users_id'] ?>">
-                                                <select name="status" class="bg-purple-500/10 border border-purple-500/20 rounded-xl px-3 py-1 text-sm 
-                                                    focus:outline-none focus:border-purple-500/50 text-white" onchange="this.form.submit()">
-                                                    <option value="" class="bg-slate-900 text-white" selected disabled>Actions</option>
-                                                    <option value="active" class="bg-slate-900 text-white">active</option>
-                                                    <option value="suspendue" class="bg-slate-900 text-white">suspendue</option>
-                                                    <!-- <option value="deleted" class="bg-slate-900 text-white">Delete</option>
-                                                    <option value="pending" class="bg-slate-900 text-white">pending</option> -->
+                                                <input type="hidden" name="userId" value="<?= htmlspecialchars($user['user_id']) ?>">
+                                                <select
+                                                    name="status"
+                                                    class="bg-purple-500/10 border border-purple-500/20 rounded-xl px-3 py-1 text-sm focus:outline-none focus:border-purple-500/50 text-white"
+                                                    onchange="this.form.submit()"
+                                                    required>
+                                                    <option value="" class="bg-slate-900 text-white" disabled selected>Select Action</option>
+                                                    <option value="active" class="bg-slate-900 text-white" <?= $user['status'] === 'active' ? 'selected' : '' ?>>Active</option>
+                                                    <option value="suspendue" class="bg-slate-900 text-white" <?= $user['status'] === 'suspendue' ? 'selected' : '' ?>>Suspendue</option>
                                                 </select>
                                             </form>
+
                                             <button name="delete" class="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-all duration-300">
                                                 <i class="fas fa-trash-alt"></i>
                                                 Delete
