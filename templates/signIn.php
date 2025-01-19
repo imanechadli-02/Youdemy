@@ -4,17 +4,19 @@ require '../classes/UserClass.php';
 // 
 // session_start();
 
+$message = '';
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = isset($_POST['email']) ? trim($_POST['email']) : '';
     $password = isset($_POST['password']) ? trim($_POST['password']) : '';
     $user = new User('', $email, $password, '');
-    $user->signIn();
-    exit();
+    $message = $user->signIn(); 
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,6 +84,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
 
             <form action="" method="POST" class="space-y-6">
+            <?php if (!empty($message)) : ?>
+                    <div class="bg-red-500 text-white p-3 rounded-lg">
+                        <?= htmlspecialchars($message) ?>
+                    </div>
+                <?php endif; ?>
                 <div class="relative">
                     <label for="email" class="block mb-2 font-medium">Username or Email</label>
                     <input type="text" id="username" name="email" required
@@ -106,10 +113,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </a>
                 </div>
 
-                <button type="submit" 
+                <button type="submit"
                     class="w-full py-3.5 bg-gradient-to-r from-primary to-secondary text-white rounded-xl font-semibold flex items-center justify-center gap-2 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/25">
                     Sign In <i class="fas fa-arrow-right"></i>
                 </button>
+
+
             </form>
 
             <div class="mt-8 text-center">
@@ -132,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
 
             <div class="text-center mt-6 text-gray-400">
-                New to Youdemy? 
+                New to Youdemy?
                 <a href="signUp.php" class="text-accent hover:text-primary font-semibold transition-colors duration-300">
                     Create an account
                 </a>
@@ -140,4 +149,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </div>
 </body>
+
 </html>

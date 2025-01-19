@@ -115,4 +115,61 @@ class Admin
 
         $dbConnection->close();
     }
+
+    public function supprimerUser($id){
+        $dbConnection = (new Connection)->getConnection();
+
+        $query = "DELETE FROM users WHERE user_id=?";
+
+        $stmt = $dbConnection->prepare($query);
+        if(!$stmt){
+            die('preparr failed' . $dbConnection->error);
+        }
+
+        $stmt->bind_param('i', $id);
+
+
+        if($stmt->execute()){
+            echo 'utilisateur supprimer avec succes';
+        }else{
+            echo "erreur". $stmt->error;
+        }
+
+        $stmt->close();
+        $dbConnection->close();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

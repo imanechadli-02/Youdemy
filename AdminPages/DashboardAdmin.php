@@ -133,7 +133,7 @@ session_start();
                                             <option value="deactivate">Deactivate</option>
                                             <option value="suspend">Suspend</option>
                                         </select>
-                                        <button class="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-all duration-300">
+                                        <button name= class="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-all duration-300">
                                             <i class="fas fa-trash-alt"></i>
                                             Delete
                                         </button>

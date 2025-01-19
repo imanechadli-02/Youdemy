@@ -9,11 +9,21 @@ $user = new Admin();
 $users = $user->getAllUsers();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $userId = $_POST['userId'];
-    $status = $_POST['status'];
+    if (isset($_POST['userId'], $_POST['status'])) {
+        $userId = $_POST['userId'];
+        $status = $_POST['status'];
 
-    // $user = new User();
-    $user->changeStatus($userId, $status);
+        $user->changeStatus($userId, $status);
+        echo "Status updated successfully";
+    }
+}
+
+if (isset($_POST['delete'])) {
+    if (isset($_POST['userId'])) {
+        $userId = $_POST['userId'];
+        $user->supprimerUser($userId);
+        echo "Utilisateur supprimé avec succès";
+    }
 }
 
 ?>
@@ -161,12 +171,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                     <option value="active" class="bg-slate-900 text-white" <?= $user['status'] === 'active' ? 'selected' : '' ?>>Active</option>
                                                     <option value="suspendue" class="bg-slate-900 text-white" <?= $user['status'] === 'suspendue' ? 'selected' : '' ?>>Suspendue</option>
                                                 </select>
-                                            </form>
-
-                                            <button name="delete" class="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-all duration-300">
+                                                <!-- <button name="delete" class="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-all duration-300">
                                                 <i class="fas fa-trash-alt"></i>
                                                 Delete
-                                            </button>
+                                            </button> -->
+                                            </form>
+                                            <form action="" method="POST">
+                                                <input type="hidden" name="userId" value="<?= htmlspecialchars($user['user_id']) ?>">
+
+                                                <button name="delete" class="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-all duration-300">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                    Delete
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
