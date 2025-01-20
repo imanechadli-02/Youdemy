@@ -130,7 +130,7 @@ class Admin
 
 
         if($stmt->execute()){
-            echo 'utilisateur supprimer avec succes';
+            // die ('utilisateur supprimer avec succes');
         }else{
             echo "erreur". $stmt->error;
         }

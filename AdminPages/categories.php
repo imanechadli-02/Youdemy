@@ -11,7 +11,7 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Youdemy Admin Dashboard</title>
+    <title>Categories Management - Youdemy</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -19,129 +19,152 @@ session_start();
             theme: {
                 extend: {
                     colors: {
-                        primary: '#4f46e5',
-                        'primary-dark': '#4338ca',
-                        background: '#0f172a',
-                        'background-dark': '#1e1b4b',
-                        surface: '#1e293b',
-                        'surface-light': '#334155',
-                    },
+                        'dark': '#0f172a',
+                        'dark-light': '#1e293b',
+                        'primary': '#8b5cf6',
+                        'primary-dark': '#7c3aed',
+                        'surface': '#1e1b4b',
+                        'surface-dark': '#312e81'
+                    }
                 }
             }
         }
     </script>
 </head>
 
-<body class="bg-background text-gray-100 font-[Poppins]">
-    <div class="flex min-h-screen">
-        <!-- Sidebar -->
-        <div class="w-[280px] bg-surface p-6 transition-all duration-300">
-            <div class="py-5 border-b border-white/10 mb-6">
-                <h2 class="text-2xl font-bold text-primary">Youdemy Admin</h2>
+<body class="bg-dark text-gray-100">
+    <!-- Top Navigation -->
+    <nav class="bg-dark-light border-b border-gray-800 fixed w-full z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-primary">Youdemy</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Search categories..." 
+                               class="w-64 px-4 py-2 rounded-lg bg-dark border border-gray-700 focus:outline-none focus:border-primary text-gray-300">
+                        <i class="fas fa-search absolute right-3 top-3 text-gray-500"></i>
+                    </div>
+                    <button class="p-2 rounded-lg hover:bg-dark-light">
+                        <i class="fas fa-bell text-gray-400"></i>
+                    </button>
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
+                            <i class="fas fa-user text-primary"></i>
+                        </div>
+                        <span class="text-gray-300"><?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin'); ?></span>
+                    </div>
+                </div>
             </div>
-            <div class="space-y-2">
-                <div onclick="location.href='DashboardAdmin.php'" class="flex items-center gap-3 p-4 rounded-xl cursor-pointer text-gray-400 hover:bg-surface-light hover:text-white hover:translate-x-1 transition-all duration-300">
-                    <i class="fas fa-home text-lg"></i>
-                    <span>Dashboard</span>
-                </div>
-                <div onclick="location.href='users.php'" class="flex items-center gap-3 p-4 rounded-xl cursor-pointer text-gray-400 hover:bg-surface-light hover:text-white hover:translate-x-1 transition-all duration-300">
-                    <i class="fas fa-users text-lg"></i>
-                    <span>Users</span>
-                </div>
+        </div>
+    </nav>
 
-                <div onclick="location.href='courses.php'" class="flex items-center gap-3 p-4 rounded-xl cursor-pointer text-gray-400 hover:bg-surface-light hover:text-white hover:translate-x-1 transition-all duration-300">
-                    <i class="fas fa-book text-lg"></i>
-                    <span>Courses</span>
+    <!-- Main Content -->
+    <div class="pt-16 px-8">
+        <!-- Header -->
+        <div class="max-w-7xl mx-auto py-6">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-gray-100">Categories Management</h1>
+                <button class="px-4 py-2 bg-primary hover:bg-primary-dark rounded-lg flex items-center gap-2 transition-all duration-300">
+                    <i class="fas fa-plus"></i>
+                    Add Category
+                </button>
+            </div>
+        </div>
+
+        <!-- Categories Grid -->
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Category Card -->
+            <div class="bg-dark-light rounded-xl border border-gray-800 overflow-hidden group hover:border-primary/50 transition-all duration-300">
+                <div class="h-32 bg-gradient-to-r from-primary/20 to-surface-dark flex items-center justify-center">
+                    <i class="fas fa-code text-4xl text-primary"></i>
                 </div>
-                <div onclick="location.href='tags.php'" class="flex items-center gap-3 p-4 rounded-xl cursor-pointer text-gray-400 hover:bg-surface-light hover:text-white hover:translate-x-1 transition-all duration-300">
-                    <i class="fas fa-tags text-lg"></i>
-                    <span>Tags</span>
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-100">Programming</h3>
+                            <p class="text-gray-400 text-sm">24 courses</p>
+                        </div>
+                        <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                            <button class="p-2 hover:bg-dark rounded-lg text-blue-400">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="p-2 hover:bg-dark rounded-lg text-red-400">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-gray-400">
+                        <i class="fas fa-users"></i>
+                        <span>1.2k students enrolled</span>
+                    </div>
                 </div>
-                <div onclick="location.href='categories.php'" class="flex items-center gap-3 p-4 rounded-xl cursor-pointer text-gray-400 hover:bg-surface-light hover:text-white hover:translate-x-1 transition-all duration-300">
-                    <i class="fas fa-sitemap text-lg"></i>
-                    <span>Categories</span>
+            </div>
+
+            <!-- Category Card -->
+            <div class="bg-dark-light rounded-xl border border-gray-800 overflow-hidden group hover:border-primary/50 transition-all duration-300">
+                <div class="h-32 bg-gradient-to-r from-purple-500/20 to-surface-dark flex items-center justify-center">
+                    <i class="fas fa-palette text-4xl text-purple-400"></i>
                 </div>
-                <div class="flex items-center gap-3 p-4 rounded-xl cursor-pointer text-gray-400 hover:bg-surface-light hover:text-white hover:translate-x-1 transition-all duration-300">
-                    <i class="fas fa-cog text-lg"></i>
-                    <span>Settings</span>
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-100">Design</h3>
+                            <p class="text-gray-400 text-sm">18 courses</p>
+                        </div>
+                        <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                            <button class="p-2 hover:bg-dark rounded-lg text-blue-400">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="p-2 hover:bg-dark rounded-lg text-red-400">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-gray-400">
+                        <i class="fas fa-users"></i>
+                        <span>856 students enrolled</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Category Card -->
+            <div class="bg-dark-light rounded-xl border border-gray-800 border-dashed flex items-center justify-center h-[232px] cursor-pointer hover:border-primary/50 transition-all duration-300">
+                <div class="text-center">
+                    <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-plus text-primary"></i>
+                    </div>
+                    <p class="text-gray-400">Add New Category</p>
                 </div>
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="flex-1 p-8">
-            <div class="flex justify-between items-center p-6 mb-8 bg-surface rounded-xl">
-                <h1 class="text-2xl font-bold">Dashboard Overview</h1>
-                <div class="flex items-center gap-4">
-                    <span>Welcome, <?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin'); ?></span>
-                    <a href="logout.php" class="px-5 py-2 bg-primary hover:bg-primary-dark text-white rounded-xl transition-all duration-300">Logout</a>
-                </div>
+        <!-- Category Stats -->
+        <div class="max-w-7xl mx-auto bg-dark-light rounded-xl border border-gray-800 p-6 mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-semibold">Category Statistics</h2>
+                <select class="bg-dark border border-gray-700 rounded-lg px-4 py-2 text-gray-300 focus:outline-none focus:border-primary">
+                    <option>Last 7 days</option>
+                    <option>Last 30 days</option>
+                    <option>Last 3 months</option>
+                </select>
             </div>
-
-            <!-- Statistics Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div class="bg-surface p-6 rounded-xl border border-white/10 hover:-translate-y-1 transition-all duration-300">
-                    <h3 class="text-gray-400 mb-4">Total Students</h3>
-                    <p class="text-3xl font-bold text-primary">1,234</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-4 bg-dark rounded-lg border border-gray-800">
+                    <h3 class="text-gray-400 mb-2">Most Popular Category</h3>
+                    <p class="text-2xl font-bold text-primary">Programming</p>
+                    <p class="text-gray-400 text-sm">45% of total enrollments</p>
                 </div>
-                <div class="bg-surface p-6 rounded-xl border border-white/10 hover:-translate-y-1 transition-all duration-300">
-                    <h3 class="text-gray-400 mb-4">Active Courses</h3>
-                    <p class="text-3xl font-bold text-primary">42</p>
+                <div class="p-4 bg-dark rounded-lg border border-gray-800">
+                    <h3 class="text-gray-400 mb-2">Fastest Growing</h3>
+                    <p class="text-2xl font-bold text-purple-400">Design</p>
+                    <p class="text-gray-400 text-sm">+28% this month</p>
                 </div>
-                <div class="bg-surface p-6 rounded-xl border border-white/10 hover:-translate-y-1 transition-all duration-300">
-                    <h3 class="text-gray-400 mb-4">Total Teachers</h3>
-                    <p class="text-3xl font-bold text-primary">18</p>
-                </div>
-                <div class="bg-surface p-6 rounded-xl border border-white/10 hover:-translate-y-1 transition-all duration-300">
-                    <h3 class="text-gray-400 mb-4">Revenue</h3>
-                    <p class="text-3xl font-bold text-primary">$12,345</p>
-                </div>
-            </div>
-
-            <!-- Recent Activity -->
-            <div class="bg-surface p-8 rounded-xl border border-white/10">
-                <h2 class="text-2xl font-bold mb-6">Recent Activity</h2>
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead>
-                            <tr class="text-left border-b border-white/10">
-                                <th class="p-4 text-gray-400 font-medium">Username</th>
-                                <th class="p-4 text-gray-400 font-medium">Role</th>
-                                <th class="p-4 text-gray-400 font-medium">Status</th>
-                                <th class="p-4 text-gray-400 font-medium">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="border-b border-white/10">
-                                <td class="p-4">
-                                    <div class="flex items-center gap-3">
-                                        <i class="fas fa-user text-primary"></i>
-                                        <span>John Doe</span>
-                                    </div>
-                                </td>
-                                <td class="p-4">Student</td>
-                                <td class="p-4">
-                                    <span class="px-3 py-1 text-sm bg-green-500/20 text-green-400 rounded-full">
-                                        Active
-                                    </span>
-                                </td>
-                                <td class="p-4">
-                                    <div class="flex items-center gap-4">
-                                        <select class="w-[120px] bg-surface-light text-white px-4 py-2 rounded-lg border border-white/10 focus:outline-none focus:border-primary">
-                                            <option value="" disabled selected>Action</option>
-                                            <option value="activate">Activate</option>
-                                            <option value="deactivate">Deactivate</option>
-                                            <option value="suspend">Suspend</option>
-                                        </select>
-                                        <button class="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-all duration-300">
-                                            <i class="fas fa-trash-alt"></i>
-                                            Delete
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="p-4 bg-dark rounded-lg border border-gray-800">
+                    <h3 class="text-gray-400 mb-2">Total Categories</h3>
+                    <p class="text-2xl font-bold text-blue-400">12</p>
+                    <p class="text-gray-400 text-sm">Active categories</p>
                 </div>
             </div>
         </div>

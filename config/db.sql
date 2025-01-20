@@ -19,6 +19,7 @@ CREATE Table Admin(
     password VARCHAR(100) NOT NULL
 );
 
+DROP table enseignants;
 CREATE Table Enseignants(
     enseignant_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(100) NOT NULL,

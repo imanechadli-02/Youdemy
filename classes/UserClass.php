@@ -145,7 +145,9 @@ class User
         }
     }
 
-
+    function isAuthorized($requiredRole) {
+        return isset($_SESSION['role']) && $_SESSION['role'] === $requiredRole;
+    }
 
     public function signIn()
     {

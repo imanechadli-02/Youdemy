@@ -22,7 +22,7 @@ if (isset($_POST['delete'])) {
     if (isset($_POST['userId'])) {
         $userId = $_POST['userId'];
         $user->supprimerUser($userId);
-        echo "Utilisateur supprimé avec succès";
+        // echo "Utilisateur supprimé avec succès";
     }
 }
 
@@ -97,7 +97,7 @@ if (isset($_POST['delete'])) {
                 <h1 class="text-2xl font-bold">Dashboard Overview</h1>
                 <div class="flex items-center gap-4">
                     <span>Welcome, <?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin'); ?></span>
-                    <a href="logout.php" class="px-5 py-2 bg-primary hover:bg-primary-dark text-white rounded-xl transition-all duration-300">Logout</a>
+                    <a href="../templates/signIn.php" class="px-5 py-2 bg-primary hover:bg-primary-dark text-white rounded-xl transition-all duration-300">Logout</a>
                 </div>
             </div>
 
