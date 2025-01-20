@@ -86,13 +86,14 @@ if (isset($_POST['delete'])) {
                     <i class="fas fa-book"></i>
                     <span>Courses</span>
                 </a>
-                <a href="categories.php" class="flex items-center gap-3 px-4 py-3 text-primary bg-primary/10 rounded-lg">
-                    <i class="fas fa-sitemap"></i>
-                    <span>Categories</span>
-                </a>
+                
                 <a href="tags.php" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-white/5 rounded-lg transition-colors">
                     <i class="fas fa-tags"></i>
                     <span>Tags</span>
+                </a>
+                <a href="categories.php" class="flex items-center gap-3 px-4 py-3 text-primary bg-primary/10 rounded-lg">
+                    <i class="fas fa-sitemap"></i>
+                    <span>Categories</span>
                 </a>
                 <a href="settings.php" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-white/5 rounded-lg transition-colors">
                     <i class="fas fa-cog"></i>
