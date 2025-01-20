@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
 
             <form action="" method="POST" class="space-y-6">
-            <?php if (!empty($message)) : ?>
+                <?php if (!empty($message)) : ?>
                     <div class="bg-red-500 text-white p-3 rounded-lg">
                         <?= htmlspecialchars($message) ?>
                     </div>

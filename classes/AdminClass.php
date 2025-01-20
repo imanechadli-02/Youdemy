@@ -139,8 +139,33 @@ class Admin
         $dbConnection->close();
     }
 
+    // public function ajouterCategorie($nom_categorie) {
+    //     $dbConnection = (new Connection)->getConnection();
 
+    //     if (empty($nom_categorie)) {
+    //         echo "Le nom de la catégorie ne peut pas être vide.";
+    //         return;
+    //     }
 
+    //     $query = "INSERT INTO Categorie (nom) VALUES (?)";
+    //     $stmt = $dbConnection->prepare($query);
+
+    //     if (!$stmt) {
+    //         die("Erreur de préparation de la requête : " . $dbConnection->error);
+    //     }
+
+    //     $stmt->bind_param('s', $nom_categorie);
+
+    //     if ($stmt->execute()) {
+    //         echo "Catégorie ajoutée avec succès.";
+    //     } else {
+    //         echo "Erreur lors de l'ajout de la catégorie : " . $stmt->error;
+    //     }
+
+    //     $stmt->close();
+    // }
+
+   
 
 
 
