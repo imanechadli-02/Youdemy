@@ -2,6 +2,10 @@
 require_once '../config/config.php';
 require_once '../classes/UserClass.php';
 require_once '../classes/classCategorie.php';
+require_once '../classes/classTags.php';
+require_once '../classes/classCoursText.php';
+
+
 session_start();
 
 // // Check if user is logged in and is teacher
@@ -12,10 +16,31 @@ session_start();
 
 $categoryObj = new Categorie();
 $categories = $categoryObj->afficherCategories();
+
+$tagsObj = new Tags();
+$tags = $tagsObj->afficherTag();
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Créer une instance de CoursText
+    $coursText = new CoursText();
+
+    // Récupérer les données envoyées depuis le formulaire
+    $coursText->setTitre($_POST['title']);
+    $coursText->setDescription($_POST['description']);
+    $coursText->setImage($_POST['image']);
+    $coursText->setContentText($_POST['content']);
+    $coursText->setTagId($_POST['tag']);
+    $coursText->setCategorieId($_POST['category']);
+    $coursText->setEnseignantId($_SESSION['user_id']);  // Assurez-vous d'avoir un ID utilisateur valide
+
+    // Appeler la méthode ajouterCours pour insérer les données dans la base
+    $coursText->ajouterCours();
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,50 +73,50 @@ $categories = $categoryObj->afficherCategories();
             </div>
 
             <!-- Course Form -->
-            <form action="process_course.php" method="POST" enctype="multipart/form-data" class="space-y-8">
+            <form action="" method="POST" enctype="multipart/form-data" class="space-y-8">
                 <!-- Basic Information -->
                 <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
                     <h2 class="text-xl font-semibold text-white mb-6">Basic Information</h2>
-                    
+
                     <!-- Course Title -->
                     <div class="mb-6">
                         <label for="title" class="block text-sm font-medium text-gray-300 mb-2">Course Title</label>
-                        <input type="text" 
-                               id="title" 
-                               name="title" 
-                               required
-                               class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl
+                        <input type="text"
+                            id="title"
+                            name="title"
+                            required
+                            class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl
                                       text-gray-100 placeholder-gray-500
                                       focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50"
-                               placeholder="Enter course title">
+                            placeholder="Enter course title">
                     </div>
 
                     <!-- Course Description -->
                     <div class="mb-6">
                         <label for="description" class="block text-sm font-medium text-gray-300 mb-2">Description</label>
-                        <textarea id="description" 
-                                  name="description" 
-                                  rows="4" 
-                                  required
-                                  class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl
+                        <textarea id="description"
+                            name="description"
+                            rows="4"
+                            required
+                            class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl
                                          text-gray-100 placeholder-gray-500
                                          focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50"
-                                  placeholder="Describe your course"></textarea>
+                            placeholder="Describe your course"></textarea>
                     </div>
 
                     <!-- Course Image -->
                     <div class="mb-6">
                         <label for="image" class="block text-sm font-medium text-gray-300 mb-2">Course Image URL</label>
                         <div class="relative">
-                            <input type="url" 
-                                   id="image" 
-                                   name="image" 
-                                   required
-                                   class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl
+                            <input type="url"
+                                id="image"
+                                name="image"
+                                required
+                                class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl
                                           text-gray-100 placeholder-gray-500
                                           focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50
                                           pr-10"
-                                   placeholder="https://example.com/image.jpg">
+                                placeholder="https://example.com/image.jpg">
                             <div class="absolute inset-y-0 right-0 flex items-center pr-3">
                                 <i class="fas fa-link text-gray-500"></i>
                             </div>
@@ -106,32 +131,32 @@ $categories = $categoryObj->afficherCategories();
                 <!-- Course Content -->
                 <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
                     <h2 class="text-xl font-semibold text-white mb-6">Course Content</h2>
-                    
+
                     <!-- Course Content Editor -->
                     <div class="mb-6">
                         <label for="content" class="block text-sm font-medium text-gray-300 mb-2">Content</label>
-                        <textarea id="content" 
-                                  name="content" 
-                                  rows="6" 
-                                  required
-                                  class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl
+                        <textarea id="content"
+                            name="content"
+                            rows="6"
+                            required
+                            class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl
                                          text-gray-100 placeholder-gray-500
                                          focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50"
-                                  placeholder="Add your course content here"></textarea>
+                            placeholder="Add your course content here"></textarea>
                     </div>
                 </div>
 
                 <!-- Categories and Tags -->
                 <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
                     <h2 class="text-xl font-semibold text-white mb-6">Categories & Tags</h2>
-                    
+
                     <!-- Category Selection -->
                     <div class="mb-6">
                         <label for="category" class="block text-sm font-medium text-gray-300 mb-2">Category</label>
-                        <select id="category" 
-                                name="category" 
-                                required
-                                class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl
+                        <select id="category"
+                            name="category"
+                            required
+                            class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl
                                        text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50">
                             <option value="">Select a category</option>
                             <?php foreach ($categories as $category): ?>
@@ -143,28 +168,33 @@ $categories = $categoryObj->afficherCategories();
                     </div>
 
                     <!-- Tags Input -->
-                    <div>
-                        <label for="tags" class="block text-sm font-medium text-gray-300 mb-2">Tags</label>
-                        <input type="text" 
-                               id="tags" 
-                               name="tags" 
-                               class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl
-                                      text-gray-100 placeholder-gray-500
-                                      focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50"
-                               placeholder="Enter tags separated by commas">
+                    <div class="mb-6">
+                        <label for="tag" class="block text-sm font-medium text-gray-300 mb-2">tag</label>
+                        <select id="tag"
+                            name="tag"
+                            required
+                            class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl
+                                    text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50">
+                            <option value="">Select a tag</option>
+                            <?php foreach ($tags as $tag): ?>
+                                <option value="<?php echo htmlspecialchars($tag['tag_id']); ?>">
+                                    <?php echo htmlspecialchars($tag['nom']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                 </div>
 
                 <!-- Submit Buttons -->
                 <div class="flex items-center gap-4">
-                    <button type="submit" 
-                            class="px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl
+                    <button type="submit"
+                        class="px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl
                                    transition-colors duration-300 flex items-center gap-2">
                         <i class="fas fa-save"></i>
                         Create Course
                     </button>
-                    <a href="DashboardEnseignant.php" 
-                       class="px-6 py-3 border border-slate-700/50 hover:bg-slate-700/50 text-gray-300 rounded-xl
+                    <a href="DashboardEnseignant.php"
+                        class="px-6 py-3 border border-slate-700/50 hover:bg-slate-700/50 text-gray-300 rounded-xl
                               transition-colors duration-300">
                         Cancel
                     </a>
@@ -192,7 +222,7 @@ $categories = $categoryObj->afficherCategories();
             dropzone.addEventListener(eventName, preventDefaults, false);
         });
 
-        function preventDefaults (e) {
+        function preventDefaults(e) {
             e.preventDefault();
             e.stopPropagation();
         }
@@ -206,4 +236,5 @@ $categories = $categoryObj->afficherCategories();
         }
     </script>
 </body>
+
 </html>

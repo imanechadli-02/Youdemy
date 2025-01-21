@@ -43,6 +43,14 @@ class Tags{
         return "Aucune donnée valide à insérer.";
     }
 
+    public function afficherTag()
+    {
+        $query = "SELECT * FROM tags ";
+        $stmt = $this->dbConnection->prepare($query);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
 
 
 
