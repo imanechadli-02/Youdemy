@@ -48,6 +48,11 @@ CREATE Table Cours(
     FOREIGN KEY (enseignant_id) REFERENCES Enseignants(enseignant_id)
 );
 
+ALTER Table Cours
+ADD COLUMN content_text TEXT DEFAULT null;
+ALTER Table Cours
+ADD COLUMN content_video VARCHAR(255) DEFAULT NULL;
+
 CREATE table Categorie(
     categorie_id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100) NOT NULL
