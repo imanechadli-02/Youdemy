@@ -53,6 +53,8 @@ CREATE Table Cours(
 
 DROP TABLE cours;
 
+ALTER table cours
+MODIFY COLUMN type ENUM('text', 'video') DEFAULT 'text';
 
 
 CREATE table Categorie(

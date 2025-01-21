@@ -74,7 +74,7 @@ session_start();
                     <i class="fas fa-home"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="ajouterCours.php" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-slate-700/50 rounded-lg transition-colors">
+                <a href="mesCours.php" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-slate-700/50 rounded-lg transition-colors">
                     <i class="fas fa-book"></i>
                     <span>My Courses</span>
                 </a>
