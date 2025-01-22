@@ -14,9 +14,13 @@ $cours = $cour->afficherCardCours();
 
 
 
-// if($_SERVER["REQUEST_METHOD"] === "POST"){
-//     if(isset())
-// }
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['edit_btn'])) {
+    $_SESSION['course_id'] = $_POST['edit_btn']; // Store course ID in session
+    header("Location: editCours.php"); // Redirect to edit course page
+    exit();
+}
+
 
 
 ?>
@@ -130,7 +134,9 @@ $cours = $cour->afficherCardCours();
                 <!-- Course Card -->
                 <?php foreach ($cours as $cour) : ?>
                     <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 overflow-hidden group hover:border-indigo-500/50 transition-all duration-300">
-                        <!-- Course Image -->
+                        
+                    <!-- Course Image -->
+
                         <div class="relative h-48 overflow-hidden">
                             <img src="<?= htmlspecialchars($cour['image']) ?>"
                                 alt="Course Image"
@@ -171,11 +177,10 @@ $cours = $cour->afficherCardCours();
                             <!-- Action Buttons -->
                             <form action="" method="POST">
                                 <div class="flex items-center gap-2">
-                                    <a href="editCours.php" nom="edit"
-                                        class="flex-1 px-4 py-2 bg-slate-700/50 hover:bg-slate-700 text-white rounded-lg
-                                      transition-colors duration-300 text-center text-sm">
+                                    <button name="edit_btn" value="<?= htmlspecialchars($cour['cours_id']) ?>" class="flex-1 px-4 py-2 bg-slate-700/50 hover:bg-slate-700 text-white rounded-lg transition-colors duration-300 text-center text-sm">
                                         Edit Course
-                                    </a>
+                                    </button>
+
                                     <button class="p-2 text-gray-400 hover:text-red-400 hover:bg-slate-700/50 rounded-lg transition-colors">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>

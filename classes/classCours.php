@@ -119,89 +119,75 @@ class Cours
 
     public function afficherCardCours()
     {
+        $dbConnection = (new Connection())->getConnection();
         $enseignant_id = $this->getEnseignantId();
-        $dbConnection = (new Connection())->getConnection();
 
-        if ($dbConnection) {
-            $query = "SELECT *
-                      FROM cours 
-                      JOIN categorie ON cours.categorie_id = categorie.categorie_id
-                      WHERE cours.user_id = ?";
-
-            $stmt = $dbConnection->prepare($query);
-            $stmt->bind_param('i', $enseignant_id);
-
-            if ($stmt->execute()) {
-                $result = $stmt->get_result();
-                $courses = $result->fetch_all(MYSQLI_ASSOC); // Fetch all courses as an associative array
-                return $courses;
-            } else {
-                echo "Error: " . $stmt->error;
-                return [];
-            }
-        }
-        return [];
-    }
-
-    public function getCoursById($id) {
-        $dbConnection = (new Connection())->getConnection();
-        $sql = "SELECT * FROM cours WHERE id = ?";
-        $stmt = $dbConnection->prepare($sql);
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-    
-        if ($result->num_rows > 0) {
-            return $result->fetch_assoc();
-        } else {
-            return null;
-        }
-    }
-    
-
-
-    public function modifierCours($id, $titre, $description, $image, $content_text, $categorie_id, $tag_id)
-    {
-        // Connexion à la base de données
-        $dbConnection = (new Connection())->getConnection();
-
-        // Requête SQL avec des placeholders
-        $query = "UPDATE cours 
-                  SET titre = ?, description = ?, image = ?, 
-                      content_text = ?, categorie_id = ?, tag_id = ?
-                  WHERE id = ?";
-
-        // Préparer la requête
+        // Préparer la requête pour récupérer tous les cours
+        $query = "SELECT * FROM cours WHERE user_id = ?";
         $stmt = $dbConnection->prepare($query);
 
-        if (!$stmt) {
-            die("Erreur lors de la préparation de la requête : " . $dbConnection->error);
+        if ($stmt === false) {
+            // Output the error if query preparation fails
+            die('Error preparing the SQL statement: ' . $dbConnection->error);
         }
 
-        // Lier les paramètres (types : s = string, i = integer, b = blob)
-        $stmt->bind_param(
-            'sssiiii', // Types des variables : string (s), integer (i)
-            $titre,
-            $description,
-            $image,
-            $content_text,
-            $categorie_id,
-            $tag_id,
-            $id
-        );
+        $stmt->bind_param("i", $enseignant_id); // "i" means integer
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-        // Exécuter la requête
-        $result = $stmt->execute();
-
-        if (!$result) {
-            die("Erreur lors de l'exécution de la requête : " . $stmt->error);
+        // Récupérer tous les résultats dans un tableau
+        $cours = [];
+        while ($row = $result->fetch_assoc()) {
+            $cours[] = $row;
         }
 
-        // Fermer la requête et la connexion
-        $stmt->close();
-        $dbConnection->close();
+        return $cours;
+    }
 
-        return $result;
+
+    public function getCourseById($id) {
+        $dbConnection = (new Connection())->getConnection();
+
+        $query = "SELECT * FROM cours WHERE cours_id = ?";
+        $stmt = $dbConnection->prepare($query);
+        $stmt->bind_param("i", $id); // "i" stands for integer
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            return $result->fetch_assoc();
+        }
+        return null;
+    }
+
+
+    public function updateCourse($id, $title, $description, $image, $content, $category, $tags)
+    {
+        $dbConnection = (new Connection())->getConnection();
+
+        $sql = "UPDATE cours
+                SET titre = ?, description = ?, image = ?, content_text = ?, categorie_id = ?, tag_id = ? 
+                WHERE cours_id = ?";
+
+        // Prepare the statement
+        $stmt = $dbConnection->prepare($sql);
+
+        if ($stmt === false) {
+            die('MySQL prepare error: ' . $dbConnection->error);
+        }
+
+        // Bind parameters (adjusting types)
+        $bindResult = $stmt->bind_param("ssssiii", $title, $description, $image, $content, $category, $tags, $id);
+        if ($bindResult === false) {
+            die('Bind param error: ' . $stmt->error);
+        }
+
+        // Execute the query
+        $executeResult = $stmt->execute();
+        if ($executeResult === false) {
+            die('Execute error: ' . $stmt->error);
+        }
+
+        return $executeResult;
     }
 
 

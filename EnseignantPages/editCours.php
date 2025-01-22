@@ -1,48 +1,65 @@
 <?php
-require_once "../config/config.php";
-require_once "../classes/classCours.php";
+require_once '../config/config.php';
+require_once '../classes/classCours.php';
+require_once '../classes/classCategorie.php';
+require_once '../classes/classTags.php';
 
-// Vérification de l'ID du cours
-if (isset($_GET['cours_id'])) {
-    $cour_id = intval($_GET['cours_id']);
-    $cour = new Cours(); // Initialisation de l'objet
-    $coursData = $cour->getCoursById($cour_id); // Récupération des données du cours
-    if (!$coursData) {
-        die("Course not found!");
-    }
+session_start();
+
+// Ensure the course_id is set in the session before accessing this page
+if (!isset($_SESSION['course_id'])) {
+    echo "Course ID is not set.";
+    exit;
 } else {
-    die("Course ID is missing!");
+    echo "Course ID: " . $_SESSION['course_id']; // Debugging output
 }
 
-// Traitement de l'édition
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['edit'])) {
-    $new_titre = $_POST['title'] ?? '';
-    $new_description = $_POST['description'] ?? '';
-    $new_image = $_POST['image'] ?? '';
-    $new_content = $_POST['content'] ?? '';
-    $new_categorie_id = $_POST['category'] ?? null;
+// Initialize classes for categories and tags
+$categoryObj = new Categorie();
+$categories = $categoryObj->afficherCategories();
 
-    $updated = $cour->modifierCours(
-        $cour_id,
-        $new_titre,
-        $new_description,
-        $new_image,
-        $new_content,
-        $new_categorie_id,
-        null
-    );
+$tagsObj = new Tags();
+$tags = $tagsObj->afficherTag();
 
-    if ($updated) {
-        echo "<script>alert('Course updated successfully!');</script>";
+// Get the course_id from the session
+$id = $_SESSION['course_id'];
+
+// Create an instance of the Cours class
+$cours = new Cours();
+
+$course = $cours->getCourseById($id);
+
+if ($course) {
+    // Fill in the course data
+    $title = $course['titre'];
+    $description = $course['description'];
+    $image = $course['image'];
+    $content = $course['content_text'];
+} else {
+    echo "Course not found. ID: $id"; // Debugging output
+    exit;
+}
+
+// Handle the form submission to update the course
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_cours'])) {
+    // Get the form data
+    $newTitle = $_POST['title'];
+    $newDescription = $_POST['description'];
+    $newImage = $_POST['image'];
+    $newContent = $_POST['content'];
+    $newCategory = $_POST['category'];
+    $newTags = 'here'; // Assuming multiple tags are selected as single selection
+
+    // Update the course in the database
+    if ($cours->updateCourse($id, $newTitle, $newDescription, $newImage, $newContent, $newCategory, $newTags)) {
+        // Redirect to the course list page after successful update
+        header("Location: mesCours.php");
+        exit;
     } else {
-        echo "<script>alert('Failed to update course.');</script>";
+        echo "Failed to update the course.";
     }
 }
 ?>
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -133,81 +150,88 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['edit'])) {
             </div>
 
             <!-- Edit Form -->
-            <form method="POST" class="max-w-4xl">
-                <!-- Course Title -->
-                <div class="mb-6">
-                    <label for="title" class="block text-sm font-medium text-gray-300 mb-2">Course Title</label>
-                    <input type="text"
-                        id="title"
-                        name="title"
-                        value="<?= htmlspecialchars($cour['titre']) ?>"
-                        class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl
-                  text-gray-100 placeholder-gray-500
-                  focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50">
+            <form method="POST" action="" class="max-w-4xl">
+                <!-- Course Preview Card -->
+                <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6 mb-8">
+                    <div class="flex items-start gap-6">
+                        <div class="w-48 h-48 rounded-xl overflow-hidden">
+                            <img src="https://example.com/course-image.jpg" alt="Course Preview" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="px-3 py-1 rounded-full text-xs bg-indigo-500/20 text-indigo-400">Published</span>
+                                <span class="text-gray-400">Last updated: 2 days ago</span>
+                            </div>
+                            <div class="flex items-center gap-4 text-sm text-gray-400 mb-4">
+                                <span class="flex items-center gap-2">
+                                    <i class="fas fa-users"></i>
+                                    86 students
+                                </span>
+                                <span class="flex items-center gap-2">
+                                    <i class="fas fa-star text-amber-400"></i>
+                                    4.8 rating
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Course Description -->
-                <div class="mb-6">
-                    <label for="description" class="block text-sm font-medium text-gray-300 mb-2">Description</label>
-                    <textarea id="description" name="description" rows="4"
-                        class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl
-                       text-gray-100 placeholder-gray-500
-                       focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50"><?= htmlspecialchars($cour['description']) ?></textarea>
-                </div>
+                <!-- Basic Information -->
+                <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6 mb-6">
+                    <h2 class="text-xl font-semibold text-white mb-6">Basic Information</h2>
+                    <!-- Course Title -->
+                    <div class="mb-6">
+                        <label for="title" class="block text-sm font-medium text-gray-300 mb-2">Course Title</label>
+                        <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($title); ?>" class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl text-gray-100 placeholder-gray-500">
+                    </div>
 
-                <!-- Course Image URL -->
-                <div class="mb-6">
-                    <label for="image" class="block text-sm font-medium text-gray-300 mb-2">Course Image URL</label>
-                    <input type="url"
-                        id="image"
-                        name="image"
-                        value="<?= htmlspecialchars($cour['image']) ?>"
-                        class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl
-                  text-gray-100 placeholder-gray-500
-                  focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50">
-                </div>
+                    <!-- Course Description -->
+                    <div class="mb-6">
+                        <label for="description" class="block text-sm font-medium text-gray-300 mb-2">Description</label>
+                        <textarea id="description" name="description" rows="4" class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl text-gray-100 placeholder-gray-500"><?php echo htmlspecialchars($description); ?></textarea>
+                    </div>
 
-                <!-- Content -->
-                <div class="mb-6">
-                    <label for="content" class="block text-sm font-medium text-gray-300 mb-2">Content</label>
-                    <textarea id="content" name="content" rows="8"
-                        class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl
-                       text-gray-100 placeholder-gray-500
-                       focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50"><?= htmlspecialchars($cour['content_text']) ?></textarea>
-                </div>
+                    <!-- Course Image URL -->
+                    <div class="mb-6">
+                        <label for="image" class="block text-sm font-medium text-gray-300 mb-2">Course Image URL</label>
+                        <input type="url" id="image" name="image" value="<?php echo htmlspecialchars($image); ?>" class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl text-gray-100 placeholder-gray-500">
+                    </div>
 
-                <!-- Category -->
-                <div class="mb-6">
-                    <label for="category" class="block text-sm font-medium text-gray-300 mb-2">Category</label>
-                    <select id="category" name="category" class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl text-gray-100">
-                        <option value="web-dev" <?= $cour['categorie_id'] == 'web-dev' ? 'selected' : '' ?>>Web Development</option>
-                        <option value="mobile-dev" <?= $cour['categorie_id'] == 'mobile-dev' ? 'selected' : '' ?>>Mobile Development</option>
-                        <option value="data-science" <?= $cour['categorie_id'] == 'data-science' ? 'selected' : '' ?>>Data Science</option>
-                    </select>
-                </div>
+                    <!-- Course Content -->
+                    <div class="mb-6">
+                        <label for="content" class="block text-sm font-medium text-gray-300 mb-2">Content</label>
+                        <textarea id="content" name="content" rows="8" class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl text-gray-100 placeholder-gray-500"><?php echo htmlspecialchars($content); ?></textarea>
+                    </div>
 
-                <!-- Tags -->
-                <div>
-                    <label for="tags" class="block text-sm font-medium text-gray-300 mb-2">Tags</label>
-                    <input type="text" id="tags" name="tags" value="javascript, web, frontend"
-                        class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl
-                  text-gray-100 placeholder-gray-500
-                  focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50">
+                    <!-- Categories -->
+                    <div class="mb-6">
+                        <label for="category" class="block text-sm font-medium text-gray-300 mb-2">Category</label>
+                        <select id="category" name="category" class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl text-gray-100">
+                            <option value="">Select a category</option>
+                            <?php foreach ($categories as $category): ?>
+                                <option value="<?php echo htmlspecialchars($category['categorie_id']); ?>" <?php echo ($category['categorie_id'] == $course['category_id']) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($category['nom']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="mb-6">
+                        <label for="tags" class="block text-sm font-medium text-gray-300 mb-2">Tags</label>
+                        <select id="tags" name="tags[]" multiple class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700/50 rounded-xl text-gray-100">
+                            <?php foreach ($tags as $tag): ?>
+                                <option value="<?php echo htmlspecialchars($tag['tag_id']); ?>" <?php echo (in_array($tag['tag_id'], explode(',', $course['tags']))) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($tag['tag_name']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                 </div>
 
                 <!-- Submit Button -->
-                <div class="flex items-center gap-4 mt-6">
-                    <button type="submit" name="edit"
-                        class="px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl
-                  transition-colors duration-300">
-                        Save Changes
-                    </button>
-                    <a href="mesCours.php" class="px-6 py-3 border border-slate-700/50 text-gray-300 rounded-xl">
-                        Cancel
-                    </a>
-                </div>
+                <button type="submit" name="update_cours" class="w-full px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700">Update Course</button>
             </form>
-
         </div>
     </main>
 </body>

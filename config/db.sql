@@ -106,3 +106,8 @@ DROP Table mescourses;
 SELECT *
                       FROM cours 
                       JOIN categorie ON cours.categorie_id = categorie.categorie_id
+
+
+
+
+SELECT * FROM cours WHERE cours_id = 9;
