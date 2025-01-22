@@ -21,6 +21,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['edit_btn'])) {
     exit();
 }
 
+if (isset($_POST['delete'])) {
+    if (isset($_POST['cours_id'])) {
+        $coursId = $_POST['cours_id'];
+        $cour->DeleteCours($coursId); // Corrected to use $coursId
+        header("Location: mesCours.php");
+    }
+}
 
 
 ?>
@@ -134,8 +141,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['edit_btn'])) {
                 <!-- Course Card -->
                 <?php foreach ($cours as $cour) : ?>
                     <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 overflow-hidden group hover:border-indigo-500/50 transition-all duration-300">
-                        
-                    <!-- Course Image -->
+
+                        <!-- Course Image -->
 
                         <div class="relative h-48 overflow-hidden">
                             <img src="<?= htmlspecialchars($cour['image']) ?>"
@@ -181,7 +188,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['edit_btn'])) {
                                         Edit Course
                                     </button>
 
-                                    <button class="p-2 text-gray-400 hover:text-red-400 hover:bg-slate-700/50 rounded-lg transition-colors">
+                                    <!-- Add a hidden input field for cours_id -->
+                                    <input type="hidden" name="cours_id" value="<?= htmlspecialchars($cour['cours_id']) ?>">
+
+                                    <button type="submit" name="delete" class="p-2 text-gray-400 hover:text-red-400 hover:bg-slate-700/50 rounded-lg transition-colors">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </div>

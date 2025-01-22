@@ -190,6 +190,13 @@ class Cours
         return $executeResult;
     }
 
+    public function DeleteCours($id){
+        $dbConnection = (new Connection())->getConnection();
+        $query = "DELETE FROM cours WHERE cours_id=?";
+        $stmt = $dbConnection->prepare($query);
+        $stmt->bind_param('i',$id);
+        $stmt->execute();
+    }
 
 
 
