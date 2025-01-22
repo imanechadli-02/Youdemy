@@ -51,6 +51,22 @@ CREATE Table Cours(
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
+CREATE TABLE Cours (
+    cours_id INT AUTO_INCREMENT PRIMARY KEY,
+    titre VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    image VARCHAR(100) NOT NULL,
+    content_text TEXT DEFAULT NULL,
+    content_video VARCHAR(255) DEFAULT NULL,
+    type ENUM('text', 'video') DEFAULT 'text',
+    categorie_id INT NOT NULL,
+    user_id INT NOT NULL,
+    tag_id INT NOT NULL,
+    FOREIGN KEY (categorie_id) REFERENCES Categorie(categorie_id),
+    FOREIGN KEY (tag_id) REFERENCES Tags(tag_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
 DROP TABLE cours;
 
 ALTER table cours
@@ -111,3 +127,11 @@ SELECT *
 
 
 SELECT * FROM cours WHERE cours_id = 9;
+
+select * from cours AS c
+JOIN categorie as ca on c.categorie_id = ca.categorie_id;
+
+SELECT * FROM cours 
+                  join categorie on cours.categorie_id = categorie.categorie_id
+                  join tags on cours.tag_id = tags.tag_id
+                  join users on cours.user_id = users.user_id

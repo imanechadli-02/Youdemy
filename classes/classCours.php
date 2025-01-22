@@ -123,7 +123,10 @@ class Cours
         $enseignant_id = $this->getEnseignantId();
 
         // Préparer la requête pour récupérer tous les cours
-        $query = "SELECT * FROM cours WHERE user_id = ?";
+        $query = "SELECT * FROM cours 
+                  join categorie on cours.categorie_id = categorie.categorie_id
+                  join tags on cours.tag_id = tags.tag_id
+                   WHERE user_id = ?";
         $stmt = $dbConnection->prepare($query);
 
         if ($stmt === false) {
@@ -132,6 +135,36 @@ class Cours
         }
 
         $stmt->bind_param("i", $enseignant_id); // "i" means integer
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Récupérer tous les résultats dans un tableau
+        $cours = [];
+        while ($row = $result->fetch_assoc()) {
+            $cours[] = $row;
+        }
+
+        return $cours;
+    }
+
+    public function afficherToutCardCours(){
+        $dbConnection = (new Connection())->getConnection();
+        // $enseignant_id = $this->getEnseignantId();
+
+        // Préparer la requête pour récupérer tous les cours
+        $query = "SELECT * FROM cours 
+                  join categorie on cours.categorie_id = categorie.categorie_id
+                  join tags on cours.tag_id = tags.tag_id
+                  join users on cours.user_id = users.user_id
+                ";
+        $stmt = $dbConnection->prepare($query);
+
+        if ($stmt === false) {
+            // Output the error if query preparation fails
+            die('Error preparing the SQL statement: ' . $dbConnection->error);
+        }
+
+        // $stmt->bind_param("i", $enseignant_id); // "i" means integer
         $stmt->execute();
         $result = $stmt->get_result();
 
