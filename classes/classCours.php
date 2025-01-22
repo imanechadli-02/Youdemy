@@ -117,6 +117,8 @@ class Cours
 
     public function ajouterCours() {}
 
+    public function afficherCours(){}
+
     public function afficherCardCours()
     {
         $dbConnection = (new Connection())->getConnection();
@@ -251,5 +253,9 @@ class Cours
                 echo "error" . $stmt->error;
             }
         }
+    }
+
+    public function mesCours($id){
+        
     }
 }

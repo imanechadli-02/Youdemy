@@ -1,5 +1,34 @@
+<?php
+
+require_once '../config/config.php';
+// require_once '../classes/UserClass.php';
+require_once '../classes/classCours.php';
+require_once '../classes/classCoursText.php';
+require_once '../classes/classCoursVideo.php';
+
+session_start();
+
+// echo  $_SESSION['type_content'];
+// echo $_SESSION['cours_id'] ;
+
+
+switch ($_SESSION['type_content']) {
+    case "text":
+        $cours = new CoursText();
+        $cours = $cours->afficherCours($_SESSION['cours_id']);
+        break;
+    case "video":
+        $cours = new CoursVideo();
+        $cours = $cours->afficherCours($_SESSION['cours_id']);
+        break;
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,21 +67,21 @@
             <!-- Course Header -->
             <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 overflow-hidden mb-8">
                 <div class="relative h-80">
-                    <img src="https://example.com/course-image.jpg" 
-                         alt="Course Banner"
-                         class="w-full h-full object-cover">
+                    <img src="<?php echo htmlspecialchars($cours['image']); ?>"
+                        alt="Course Banner"
+                        class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
                     <div class="absolute bottom-6 left-6 right-6">
                         <div class="flex items-center gap-3 mb-4">
-                            <span class="px-3 py-1 rounded-full text-xs bg-indigo-500/20 text-indigo-400">Web Development</span>
+                            <span class="px-3 py-1 rounded-full text-xs bg-indigo-500/20 text-indigo-400"><?php echo htmlspecialchars($cours['nom']); ?></span>
                         </div>
-                        <h1 class="text-3xl font-bold text-white mb-2">Modern Web Development Course</h1>
+                        <h1 class="text-3xl font-bold text-white mb-2"><?php echo htmlspecialchars($cours['titre']); ?></h1>
                         <div class="flex items-center gap-6 text-gray-300">
                             <span class="flex items-center gap-2">
                                 <i class="fas fa-user-tie text-indigo-400"></i>
-                                John Doe
+                                <?php echo htmlspecialchars($cours['username']); ?>
                             </span>
-                            
+
                             <span class="flex items-center gap-2">
                                 <i class="fas fa-users text-indigo-400"></i>
                                 1,234 students
@@ -70,50 +99,44 @@
                     <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
                         <h2 class="text-xl font-semibold text-white mb-4">About This Course</h2>
                         <p class="text-gray-300 leading-relaxed">
-                            Learn modern web development techniques and best practices with this comprehensive course. 
-                            Master HTML, CSS, JavaScript, and modern frameworks to build responsive and dynamic websites.
+                        <?php echo htmlspecialchars($cours['description']); ?>
                         </p>
                     </div>
 
-                    
+
 
                     <!-- Course Content -->
-                    <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
-                        <h2 class="text-xl font-semibold text-white mb-4">Course Content</h2>
-                        <div class="space-y-4">
-                            <!-- Section 1 -->
-                            <div class="border border-slate-700/50 rounded-lg overflow-hidden">
-                                <button class="w-full px-6 py-4 flex items-center justify-between bg-slate-700/30 hover:bg-slate-700/50 transition-colors">
-                                    <div class="flex items-center gap-3">
-                                        <i class="fas fa-chevron-down text-indigo-400"></i>
-                                        <span class="text-white font-medium">1. Introduction to Web Development</span>
-                                    </div>
-                                    <span class="text-gray-400 text-sm">3 lectures • 45min</span>
-                                </button>
-                                <div class="p-4 space-y-2">
-                                    <div class="flex items-center gap-3 text-gray-300 px-2 py-2 hover:bg-slate-700/30 rounded-lg">
-                                        <i class="fas fa-play-circle text-indigo-400"></i>
-                                        <span>1.1 Welcome to the Course</span>
-                                        <span class="ml-auto text-sm text-gray-400">15:00</span>
-                                    </div>
-                                    <div class="flex items-center gap-3 text-gray-300 px-2 py-2 hover:bg-slate-700/30 rounded-lg">
-                                        <i class="fas fa-play-circle text-indigo-400"></i>
-                                        <span>1.2 Setting Up Your Environment</span>
-                                        <span class="ml-auto text-sm text-gray-400">20:00</span>
-                                    </div>
-                                    <div class="flex items-center gap-3 text-gray-300 px-2 py-2 hover:bg-slate-700/30 rounded-lg">
-                                        <i class="fas fa-play-circle text-indigo-400"></i>
-                                        <span>1.3 Your First Web Page</span>
-                                        <span class="ml-auto text-sm text-gray-400">10:00</span>
-                                    </div>
+                    <?php if ($_SESSION['type_content'] === 'text') : ?>
+                        <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
+                            <h2 class="text-xl font-semibold text-white mb-4">Course Content</h2>
+                            <div class="space-y-4">
+                                <!-- Section 1 -->
+
+                                <div class="flex items-center gap-3 text-gray-300 px-2 py-2 hover:bg-slate-700/30 rounded-lg">
+                                    <!-- <i class="fas fa-play-circle text-indigo-400"></i> -->
+                                    <span><?php echo htmlspecialchars($cours['content_text']); ?></span>
+                                    <!-- <span class="ml-auto text-sm text-gray-400">15:00</span> -->
                                 </div>
+
+                                <!-- Add more sections with similar structure -->
                             </div>
-
-                            <!-- Add more sections with similar structure -->
                         </div>
-                    </div>
 
-                    
+                        <!-- <p><?php echo htmlspecialchars($cours['content_text']); ?></p> -->
+                    <?php elseif ($_SESSION['type_content'] === 'video') : ?>
+                        <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
+                            <h2 class="text-xl font-semibold text-white mb-4">Course Content</h2>
+                            <iframe width="640" height="360"
+                                src="<?php echo htmlspecialchars($cours['content_video']); ?>"
+                                title="YouTube video player"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                            </iframe>
+                        <?php endif; ?>
+                        </div>
+
+
                 </div>
 
                 <!-- Course Sidebar -->
@@ -151,4 +174,5 @@
         </div>
     </main>
 </body>
+
 </html>

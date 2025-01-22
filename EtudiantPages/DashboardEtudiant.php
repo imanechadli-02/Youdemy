@@ -9,6 +9,11 @@ $cour = new Cours();
 // $cour->setEnseignantId($_SESSION['user_id']);
 $cours = $cour->afficherToutCardCours();
 
+if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['details_btn'])) {
+    $_SESSION['type_content'] = $_POST['type_content'];
+    $_SESSION['cours_id'] = $_POST['details_btn'];
+    header("Location: detailCours.php");
+}
 
 ?>
 
@@ -144,6 +149,7 @@ $cours = $cour->afficherToutCardCours();
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Course Card -->
                     <?php foreach ($cours as $cour) : ?>
+                        <!-- <a href="detailCours.php?id=<?= urlencode($cour['cours_id']) ?>"> -->
                         <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 overflow-hidden group hover:border-indigo-500/50 transition-all duration-300">
                             <div class="relative h-48">
                                 <img src="<?= htmlspecialchars($cour['image']) ?>"
@@ -157,7 +163,12 @@ $cours = $cour->afficherToutCardCours();
                                 </div>
                             </div>
                             <div class="p-6">
-                                <h3 class="text-xl font-semibold text-white mb-2"><?= htmlspecialchars($cour['titre']) ?></h3>
+                                <form action="" method="post">
+                                    <input name="type_content" type="hidden" value="<?= htmlspecialchars($cour['type']) ?>">
+                                    <button name="details_btn" value="<?= htmlspecialchars($cour['cours_id']) ?>">
+                                        <h3 class="text-xl font-semibold text-white mb-2"><?= htmlspecialchars($cour['titre']) ?></h3>
+                                    </button>
+                                </form>
                                 <p class="text-gray-400 text-sm mb-4"><?= htmlspecialchars($cour['description']) ?></p>
                                 <div class="flex items-center justify-between mb-4">
                                     <!-- Course Stats -->
@@ -178,13 +189,16 @@ $cours = $cour->afficherToutCardCours();
                                         <i class="fas fa-user-tie text-indigo-400 mr-2"></i>
                                         <?= htmlspecialchars($cour['username']) ?>
                                     </span>
-                                    
+
                                 </div>
-                                <button class="w-full px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors">
-                                    Enroll Now
-                                </button>
+                                <form action="" method="POST">
+                                    <button class="w-full px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors">
+                                        Enroll Now
+                                    </button>
+                                </form>
                             </div>
                         </div>
+                        <!-- </a> -->
                     <?php endforeach ?>
 
                     <!-- Répétez la carte de cours pour plus de cours -->

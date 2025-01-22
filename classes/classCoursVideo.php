@@ -34,6 +34,44 @@ class CoursVideo extends Cours
             }
         }
     }
+
+    public function afficherCours()
+    {
+        $dbConnection = (new Connection())->getConnection();
+    
+        if (!$dbConnection) {
+            die("Erreur de connexion à la base de données.");
+        }
+    
+        $query = "
+            SELECT * FROM cours 
+                join categorie on cours.categorie_id = categorie.categorie_id
+                join tags on cours.tag_id = tags.tag_id
+                join users on cours.user_id = users.user_id  
+            WHERE 
+                cours_id = ? AND type = 'video'
+        ";
+    
+        $stmt = $dbConnection->prepare($query);
+    
+        if (!$stmt) {
+            die("Erreur lors de la préparation de la requête : " . $dbConnection->error);
+        }
+    
+        $stmt->bind_param("i", $_SESSION['cours_id']); // "i" pour un entier
+        $stmt->execute();
+    
+        $result = $stmt->get_result();
+    
+        if ($result->num_rows > 0) {
+            return $result->fetch_assoc();
+        } else {
+            echo "<script>alert('Aucun cours trouvé pour cet ID.');</script>";
+            return null;
+        }
+    }
+    
+
     
     
 
