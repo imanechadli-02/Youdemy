@@ -16,17 +16,17 @@ class CoursText extends Cours
         $tag_id = $this->getTagId();
         $categorie_id = $this->getCategorieId();
         $enseignant_id = $this->getEnseignantId();
-        $type = 'text'; // Définir explicitement le type
-    
+        $type = 'text';
+
         $dbConnection = (new Connection())->getConnection();
-    
+
         if ($dbConnection) {
-            
+
             $query = "INSERT INTO Cours (titre, description, image, content_text, tag_id, categorie_id, user_id, type) 
                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $dbConnection->prepare($query);
             $stmt->bind_param("ssssiiis", $titre, $description, $image, $content_text, $tag_id, $categorie_id, $enseignant_id, $type);
-    
+
             if ($stmt->execute()) {
                 echo "<script>alert('Course added successfully')</script>";
             } else {
@@ -34,7 +34,4 @@ class CoursText extends Cours
             }
         }
     }
-    
-    
-
 }

@@ -102,3 +102,7 @@ CREATE table mesCourses(
     FOREIGN KEY (etudiant_id) REFERENCES Etudiant(etudiant_id)
 );
 DROP Table mescourses;
+
+SELECT *
+                      FROM cours 
+                      JOIN categorie ON cours.categorie_id = categorie.categorie_id

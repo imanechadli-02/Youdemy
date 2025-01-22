@@ -1,16 +1,29 @@
 <?php
 require_once '../config/config.php';
 require_once '../classes/UserClass.php';
+require_once '../classes/classCours.php';
 session_start();
 
 // if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'enseignant') {
 //     header('Location: ../templates/signIn.php');
 //     exit();
 // }
+$cour = new Cours();
+$cour->setEnseignantId($_SESSION['user_id']);
+$cours = $cour->afficherCardCours();
+
+
+
+// if($_SERVER["REQUEST_METHOD"] === "POST"){
+//     if(isset())
+// }
+
+
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,9 +55,9 @@ session_start();
                 </div>
                 <div class="flex items-center gap-6">
                     <div class="relative group">
-                        <input type="text" 
-                               placeholder="Search courses..." 
-                               class="w-72 px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700/50 
+                        <input type="text"
+                            placeholder="Search courses..."
+                            class="w-72 px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700/50 
                                       text-gray-100 placeholder-gray-500
                                       focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50">
                         <i class="fas fa-search absolute right-3 top-3 text-slate-600"></i>
@@ -104,9 +117,9 @@ session_start();
                     <h1 class="text-3xl font-bold text-white mb-2">My Courses</h1>
                     <p class="text-gray-400">Manage and monitor your courses</p>
                 </div>
-                <a href="ajouterCours.php" 
-                   class="px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl
-                          transition-colors duration-300 flex items-center gap-2">
+                <a id="openModal"
+                    class="px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl
+                          transition-colors duration-300 flex items-center gap-2 cursor-pointer">
                     <i class="fas fa-plus"></i>
                     Create New Course
                 </a>
@@ -115,63 +128,111 @@ session_start();
             <!-- Courses Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Course Card -->
-                <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 overflow-hidden group hover:border-indigo-500/50 transition-all duration-300">
-                    <!-- Course Image -->
-                    <div class="relative h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" 
-                             alt="Course Image"
-                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/75 to-transparent"></div>
-                        <div class="absolute bottom-4 left-4 right-4 flex justify-between items-center">
-                            <span class="px-3 py-1 rounded-full text-xs bg-indigo-500/20 text-indigo-400">
-                                category
-                            </span>
-                            <span class="flex items-center gap-1 text-amber-400">
-                                <i class="fas fa-star text-xs"></i>
-                                <span class="text-white text-sm">4.8</span>
-                            </span>
-                        </div>
-                    </div>
+                <?php foreach ($cours as $cour) : ?>
+                    <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 overflow-hidden group hover:border-indigo-500/50 transition-all duration-300">
+                        <!-- Course Image -->
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="<?= htmlspecialchars($cour['image']) ?>"
+                                alt="Course Image"
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/75 to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 right-4 flex justify-between items-center">
+                                <span class="px-3 py-1 rounded-full text-xs bg-indigo-500/20 text-indigo-400">
+                                    <?= htmlspecialchars($cour['nom']) ?>
+                                </span>
 
-                    <!-- Course Info -->
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-white mb-2 line-clamp-1">
-                            Modern Web Development
-                        </h3>
-                        <p class="text-gray-400 text-sm mb-4 line-clamp-2">
-                            Learn modern web development techniques and best practices with this comprehensive course.
-                        </p>
-                        
-                        <!-- Course Stats -->
-                        <div class="flex items-center justify-between text-sm text-gray-400 mb-4">
-                            <span class="flex items-center gap-2">
-                                <i class="fas fa-users"></i>
-                                86 students
-                            </span>
-                            <span class="flex items-center gap-2">
-                                <i class="fas fa-clock"></i>
-                                12 lessons
-                            </span>
+                            </div>
                         </div>
 
-                        <!-- Action Buttons -->
-                        <div class="flex items-center gap-2">
-                            <a href="#" 
-                               class="flex-1 px-4 py-2 bg-slate-700/50 hover:bg-slate-700 text-white rounded-lg
+                        <!-- Course Info -->
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-white mb-2 line-clamp-1">
+                                <?= htmlspecialchars($cour['titre']) ?>
+                            </h3>
+                            <p class="text-gray-400 text-sm mb-4 line-clamp-2">
+                                <?= htmlspecialchars($cour['description']) ?>
+                            </p>
+
+                            <!-- Course Stats -->
+                            <div class="flex items-center justify-between text-sm text-gray-400 mb-4">
+                                <?php if (htmlspecialchars($cour['type']) === 'video'): ?>
+                                    <span class="flex items-center gap-2">
+                                        <i class="fas fa-video"></i>
+                                        <?= htmlspecialchars($cour['type']) ?>
+                                    </span>
+                                <?php elseif (htmlspecialchars($cour['type']) === 'text'): ?>
+                                    <span class="flex items-center gap-2">
+                                        <i class="fas fa-file-alt"></i>
+                                        <?= htmlspecialchars($cour['type']) ?>
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <form action="" method="POST">
+                                <div class="flex items-center gap-2">
+                                    <a href="editCours.php" nom="edit"
+                                        class="flex-1 px-4 py-2 bg-slate-700/50 hover:bg-slate-700 text-white rounded-lg
                                       transition-colors duration-300 text-center text-sm">
-                                Edit Course
-                            </a>
-                            <button class="p-2 text-gray-400 hover:text-red-400 hover:bg-slate-700/50 rounded-lg transition-colors">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
+                                        Edit Course
+                                    </a>
+                                    <button class="p-2 text-gray-400 hover:text-red-400 hover:bg-slate-700/50 rounded-lg transition-colors">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                </div>
-
-                <!-- Vous pouvez répéter la carte de cours pour plus de cours -->
-                
+                <?php endforeach ?>
             </div>
         </div>
     </main>
+
+    <!-- Modal for Course Creation -->
+    <div id="createCourseModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center hidden z-20">
+        <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl shadow-lg p-6 max-w-sm w-full">
+            <h2 class="text-xl font-bold text-white mb-4">Créer un nouveau cours</h2>
+            <p class="text-gray-400 mb-6">Choisissez le type de cours que vous souhaitez créer :</p>
+            <div class="flex flex-col gap-4">
+                <a href="ajouterCours.php"
+                    class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg text-center transition-colors duration-300">
+                    Créer un cours texte
+                </a>
+                <a href="ajouterCoursvideo.php"
+                    class="px-4 py-2 bg-violet-500 hover:bg-violet-600 text-white rounded-lg text-center transition-colors duration-300">
+                    Créer un cours vidéo
+                </a>
+            </div>
+            <button id="closeModal"
+                class="mt-6 w-full px-4 py-2 bg-slate-700 hover:bg-slate-600 text-gray-400 rounded-lg text-center transition-colors">
+                Annuler
+            </button>
+        </div>
+    </div>
+
+    <!-- Script JavaScript -->
+    <script>
+        const modal = document.getElementById('createCourseModal');
+        const openModal = document.getElementById('openModal');
+        const closeModal = document.getElementById('closeModal');
+
+        // Afficher le modal
+        openModal.addEventListener('click', () => {
+            modal.classList.remove('hidden');
+        });
+
+        // Masquer le modal
+        closeModal.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+
+        // Fermer le modal si l'utilisateur clique en dehors
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+            }
+        });
+    </script>
 </body>
+
 </html>
