@@ -53,12 +53,60 @@ switch ($_SESSION['type_content']) {
 <body class="bg-gradient-to-br from-slate-900 to-slate-800 min-h-screen">
     <!-- Top Navigation -->
     <nav class="bg-slate-800/50 backdrop-blur-xl border-b border-slate-700/50 fixed w-full z-10">
-        <!-- ... Navigation content (same as dashboard) ... -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold bg-gradient-to-r from-indigo-500 to-violet-500 bg-clip-text text-transparent">Youdemy</span>
+                </div>
+                <div class="flex items-center gap-6">
+                    <div class="relative group">
+                        <input type="text"
+                            placeholder="Search courses..."
+                            class="w-72 px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700/50 
+                                      text-gray-100 placeholder-gray-500
+                                      focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50">
+                        <i class="fas fa-search absolute right-3 top-3 text-slate-600"></i>
+                    </div>
+                    <button class="p-2 rounded-xl hover:bg-slate-700/50 transition-colors">
+                        <i class="fas fa-bell text-slate-400"></i>
+                    </button>
+                    <div class="flex items-center gap-3 bg-slate-800/50 px-4 py-2 rounded-xl border border-slate-700/50">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center">
+                            <i class="fas fa-user text-indigo-400"></i>
+                        </div>
+                        <span class="text-gray-300"><?php echo htmlspecialchars($_SESSION['username']) ?></span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </nav>
 
     <!-- Sidebar -->
     <aside class="fixed left-0 top-16 h-full w-64 bg-slate-800/50 backdrop-blur-xl border-r border-slate-700/50">
-        <!-- ... Sidebar content (same as dashboard) ... -->
+        <div class="p-4">
+            <nav class="space-y-1">
+                <a href="DashboardEtudiant.php" class="flex items-center gap-3 px-4 py-3 text-indigo-400 bg-indigo-500/10 rounded-lg">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="mycourses.php" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-slate-700/50 rounded-lg transition-colors">
+                    <i class="fas fa-book"></i>
+                    <span>My Courses</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-slate-700/50 rounded-lg transition-colors">
+                    <i class="fas fa-calendar"></i>
+                    <span>Schedule</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-slate-700/50 rounded-lg transition-colors">
+                    <i class="fas fa-certificate"></i>
+                    <span>Certificates</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-slate-700/50 rounded-lg transition-colors">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </div>
     </aside>
 
     <!-- Main Content -->

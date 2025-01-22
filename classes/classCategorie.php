@@ -54,10 +54,11 @@ class Categorie
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function supprimerCategorie($id) {
+    public function supprimerCategorie($id)
+    {
         $query = "DELETE FROM categorie WHERE categorie_id=?";
         $stmt = $this->dbConnection->prepare($query);
-        $stmt->bind_param('i',$id);
+        $stmt->bind_param('i', $id);
 
         $stmt->execute();
     }

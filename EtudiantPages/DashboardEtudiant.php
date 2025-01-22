@@ -6,7 +6,6 @@ require_once '../classes/classCours.php';
 session_start();
 
 $cour = new Cours();
-// $cour->setEnseignantId($_SESSION['user_id']);
 $cours = $cour->afficherToutCardCours();
 
 if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['details_btn'])) {
@@ -14,6 +13,28 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['details_btn'])) {
     $_SESSION['cours_id'] = $_POST['details_btn'];
     header("Location: detailCours.php");
 }
+
+
+if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['enroll_btn'])) {
+    $userId = $_SESSION['user_id'];  // ID de l'utilisateur
+    $coursId = $_POST['enroll_btn'];  // ID du cours
+
+
+
+    // Debugging output
+    echo "User ID: " . htmlspecialchars($userId) . "<br>";
+    echo "Course ID: " . htmlspecialchars($coursId) . "<br>";
+
+    // Appel de la fonction pour ajouter le cours à l'utilisateur
+    $coursObj = new Cours();
+    $coursObj->AjoutermesCours($userId, $coursId);
+
+    echo "<script>alert('Vous avez été inscrit avec succès au cours !');</script>";
+    // Rediriger vers la page des cours ou une autre page pertinente après l'inscription
+    header("Location: DashboardEtudiant.php");
+    exit();
+}
+
 
 ?>
 
@@ -81,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['details_btn'])) {
                     <i class="fas fa-home"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-slate-700/50 rounded-lg transition-colors">
+                <a href="mycourses.php" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-slate-700/50 rounded-lg transition-colors">
                     <i class="fas fa-book"></i>
                     <span>My Courses</span>
                 </a>
@@ -192,10 +213,12 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['details_btn'])) {
 
                                 </div>
                                 <form action="" method="POST">
-                                    <button class="w-full px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors">
+                                    <button name="enroll_btn" value="<?= htmlspecialchars($cour['cours_id']) ?>"
+                                        class="w-full px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors">
                                         Enroll Now
                                     </button>
                                 </form>
+
                             </div>
                         </div>
                         <!-- </a> -->

@@ -117,7 +117,7 @@ class Cours
 
     public function ajouterCours() {}
 
-    public function afficherCours(){}
+    public function afficherCours() {}
 
     public function afficherCardCours()
     {
@@ -149,7 +149,8 @@ class Cours
         return $cours;
     }
 
-    public function afficherToutCardCours(){
+    public function afficherToutCardCours()
+    {
         $dbConnection = (new Connection())->getConnection();
         // $enseignant_id = $this->getEnseignantId();
 
@@ -180,7 +181,8 @@ class Cours
     }
 
 
-    public function getCourseById($id) {
+    public function getCourseById($id)
+    {
         $dbConnection = (new Connection())->getConnection();
 
         $query = "SELECT * FROM cours WHERE cours_id = ?";
@@ -225,11 +227,12 @@ class Cours
         return $executeResult;
     }
 
-    public function DeleteCours($id){
+    public function DeleteCours($id)
+    {
         $dbConnection = (new Connection())->getConnection();
         $query = "DELETE FROM cours WHERE cours_id=?";
         $stmt = $dbConnection->prepare($query);
-        $stmt->bind_param('i',$id);
+        $stmt->bind_param('i', $id);
         $stmt->execute();
     }
 
@@ -255,7 +258,91 @@ class Cours
         }
     }
 
-    public function mesCours($id){
-        
+    public function AjoutermesCours($userId, $coursId)
+    {
+        // Create the database connection
+        $dbConnection = (new Connection())->getConnection();
+
+        // Check if the connection is established
+        if ($dbConnection->connect_error) {
+            die("Connection failed: " . $dbConnection->connect_error);
+        }
+
+        // Check if the course is already added to the user's courses to prevent duplicate entries
+        $checkQuery = "SELECT 1 FROM mesCourses WHERE cours_id = ? AND user_id = ?";
+        $checkStmt = $dbConnection->prepare($checkQuery);
+        if ($checkStmt === false) {
+            die('MySQL prepare error: ' . $dbConnection->error);
+        }
+
+        // Bind the parameters and execute
+        $checkStmt->bind_param('ii', $coursId, $userId);
+        $checkStmt->execute();
+        $checkStmt->store_result();
+
+        // If the course already exists for the student, return an error message
+        if ($checkStmt->num_rows > 0) {
+            echo "You are already enrolled in this course!";
+            $checkStmt->close();
+            return;
+        }
+
+        // Insert the course into the student's courses
+        $query = "INSERT INTO mesCourses (cours_id, user_id) VALUES (?, ?)";
+        $stmt = $dbConnection->prepare($query);
+
+        // Check if the statement preparation is successful
+        if ($stmt === false) {
+            die('MySQL prepare error: ' . $dbConnection->error);
+        }
+
+        // Bind the parameters and execute the query
+        $stmt->bind_param('ii', $coursId, $userId);
+        if ($stmt->execute()) {
+            echo "<script>alert('Course added successfully!')</script>";
+        } else {
+            // echo "<script>alert('Course nooooo added successfully!')</script>";
+            die("Error: " . $stmt->error);
+        }
+
+        // Close the statement and connection
+        $stmt->close();
+        $dbConnection->close();
     }
+
+    public function getMescourses()
+{
+    $dbConnection = (new Connection())->getConnection();
+
+    $query = "SELECT 
+                Categorie.nom AS categorie_name,
+                cours.cours_id,
+                cours.titre,
+                cours.description,
+                cours.image,
+                users.username AS course_instructor
+              FROM 
+                Categorie
+              JOIN 
+                cours ON Categorie.categorie_id = cours.categorie_id
+              JOIN 
+                users ON cours.user_id = users.user_id
+              ORDER BY 
+                Categorie.nom, cours.titre";
+
+    // Use query() if there are no parameters to bind
+    $result = $dbConnection->query($query);
+
+    // Check if query was successful
+    if ($result) {
+        // Fetch all rows as an associative array
+        $courses = $result->fetch_all(MYSQLI_ASSOC);
+
+        return $courses; // Return the result
+    } else {
+        // Handle query error
+        return "Error: " . $dbConnection->error;
+    }
+}
+
 }

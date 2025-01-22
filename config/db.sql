@@ -113,9 +113,9 @@ DROP Table cours_etudiant;
 CREATE table mesCourses(
     lib_id INT AUTO_INCREMENT PRIMARY KEY,
     cours_id INT NOT NULL,
-    etudiant_id INT NOT NULL,
+    user_id INT NOT NULL,
     FOREIGN KEY (cours_id) REFERENCES Cours(cours_id),
-    FOREIGN KEY (etudiant_id) REFERENCES Etudiant(etudiant_id)
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 DROP Table mescourses;
 
@@ -135,3 +135,42 @@ SELECT * FROM cours
                   join categorie on cours.categorie_id = categorie.categorie_id
                   join tags on cours.tag_id = tags.tag_id
                   join users on cours.user_id = users.user_id
+
+
+
+
+SELECT 
+    cours.cours_id, 
+    cours.titre, 
+    cours.description, 
+    cours.image, 
+    users.username, 
+    Categorie.nom AS categorie_name,
+    COUNT(mesCourses.lib_id) AS total_courses
+FROM 
+    mesCourses 
+JOIN 
+    cours ON mesCourses.cours_id = cours.cours_id 
+JOIN 
+    users ON mesCourses.user_id = users.user_id 
+JOIN 
+    Categorie ON cours.categorie_id = Categorie.categorie_id
+GROUP BY 
+    cours.cours_id, cours.titre, cours.description, cours.image, users.username, Categorie.nom;
+
+
+SELECT 
+    Categorie.nom AS categorie_name,
+    cours.cours_id,
+    cours.titre,
+    cours.description,
+    cours.image,
+    users.username AS course_instructor
+FROM 
+    Categorie
+JOIN 
+    cours ON Categorie.categorie_id = cours.categorie_id
+JOIN 
+    users ON cours.user_id = users.user_id
+ORDER BY 
+    Categorie.nom, cours.titre;
