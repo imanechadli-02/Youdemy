@@ -1,10 +1,15 @@
 <?php
-require_once "../classes/classCours.php"; // Include the Cours class file
+require_once "../classes/classCours.php"; 
 session_start();
-// Assuming user is logged in, and userId is retrieved from session or authentication
-$userId = 1;  // This should come from a session or logged-in user's data
+
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'etudiant') {
+    header('Location: ../templates/signIn.php');
+    exit();
+}
+
+$userId = 1;  
 $coursObj = new Cours();
-$courses = $coursObj->getMescourses();  // Fetch the user's courses
+$courses = $coursObj->getMescourses();  
 ?>
 
 <!DOCTYPE html>

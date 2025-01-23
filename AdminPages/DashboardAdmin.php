@@ -1,17 +1,24 @@
 <?php
 require_once '../config/config.php';
 require_once '../classes/UserClass.php';
+require_once '../classes/classCours.php';
 session_start();
 
 // Check if user is logged in and is admin
-// if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-//     header('Location: ../templates/signIn.php');
-//     exit();
-// }
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    header('Location: ../templates/signIn.php');
+    exit();
+}
+
+$cour = new Cours();
+$totalCours = $cour->TotalCours();
+
+$coursPlusEtudiants = $cour->CoursAvecPlusDétudiants();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,9 +51,9 @@ session_start();
                 </div>
                 <div class="flex items-center gap-6">
                     <div class="relative group">
-                        <input type="text" 
-                               placeholder="Search..." 
-                               class="w-72 px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700/50 
+                        <input type="text"
+                            placeholder="Search..."
+                            class="w-72 px-4 py-2.5 rounded-xl bg-slate-900/50 border border-slate-700/50 
                                       text-gray-100 placeholder-gray-500
                                       focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50 
                                       transition-all duration-300 backdrop-blur-sm
@@ -98,8 +105,8 @@ session_start();
             </nav>
         </div>
     </aside>
-        <!-- Main Content -->
-        <main class="ml-64 pt-16">
+    <!-- Main Content -->
+    <main class="ml-64 pt-16">
         <div class="p-8">
             <!-- Stats Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -124,21 +131,23 @@ session_start();
                         <span class="text-sm text-emerald-400">+5</span>
                     </div>
                     <h3 class="text-gray-400 text-sm">Total Courses</h3>
-                    <p class="text-2xl font-bold text-white">245</p>
+                    <p class="text-2xl font-bold text-white"><?php echo $totalCours; ?></p>
                 </div>
 
                 <!-- Platform Revenue -->
                 <div class="bg-slate-800/50 backdrop-blur-sm p-6 rounded-xl border border-slate-700/50 hover:border-indigo-500/50 transition-all duration-300">
                     <div class="flex items-center justify-between mb-4">
                         <div class="w-12 h-12 bg-emerald-500/20 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-dollar-sign text-emerald-400"></i>
+                            <i class="fas fa-book text-emerald-400"></i>
                         </div>
+                        <!-- You can replace this with a dynamic percentage if you need -->
                         <span class="text-sm text-emerald-400">+18%</span>
                     </div>
-                    <h3 class="text-gray-400 text-sm">Platform Revenue</h3>
-                    <p class="text-2xl font-bold text-white">$24,500</p>
+                    <h3 class="text-gray-400 text-sm">Cours avec le plus d'étudiants</h3>
+                    <p class="text-2xl font-bold text-white">
+                        <?php echo $coursPlusEtudiants['titre']; ?> (<?php echo $coursPlusEtudiants['total_etudiants']; ?> étudiants)
+                    </p>
                 </div>
-
                 <!-- Active Categories -->
                 <div class="bg-slate-800/50 backdrop-blur-sm p-6 rounded-xl border border-slate-700/50 hover:border-indigo-500/50 transition-all duration-300">
                     <div class="flex items-center justify-between mb-4">
@@ -257,4 +266,5 @@ session_start();
         </div>
     </main>
 </body>
+
 </html>

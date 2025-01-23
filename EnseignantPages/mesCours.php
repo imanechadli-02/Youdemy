@@ -4,10 +4,10 @@ require_once '../classes/UserClass.php';
 require_once '../classes/classCours.php';
 session_start();
 
-// if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'enseignant') {
-//     header('Location: ../templates/signIn.php');
-//     exit();
-// }
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'enseignant') {
+    header('Location: ../templates/signIn.php');
+    exit();
+}
 $cour = new Cours();
 $cour->setEnseignantId($_SESSION['user_id']);
 $cours = $cour->afficherCardCours();
@@ -16,15 +16,15 @@ $cours = $cour->afficherCardCours();
 
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['edit_btn'])) {
-    $_SESSION['course_id'] = $_POST['edit_btn']; // Store course ID in session
-    header("Location: editCours.php"); // Redirect to edit course page
+    $_SESSION['course_id'] = $_POST['edit_btn']; 
+    header("Location: editCours.php"); 
     exit();
 }
 
 if (isset($_POST['delete'])) {
     if (isset($_POST['cours_id'])) {
         $coursId = $_POST['cours_id'];
-        $cour->DeleteCours($coursId); // Corrected to use $coursId
+        $cour->DeleteCours($coursId); 
         header("Location: mesCours.php");
     }
 }
@@ -231,17 +231,14 @@ if (isset($_POST['delete'])) {
         const openModal = document.getElementById('openModal');
         const closeModal = document.getElementById('closeModal');
 
-        // Afficher le modal
         openModal.addEventListener('click', () => {
             modal.classList.remove('hidden');
         });
 
-        // Masquer le modal
         closeModal.addEventListener('click', () => {
             modal.classList.add('hidden');
         });
 
-        // Fermer le modal si l'utilisateur clique en dehors
         window.addEventListener('click', (e) => {
             if (e.target === modal) {
                 modal.classList.add('hidden');

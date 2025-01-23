@@ -154,7 +154,7 @@ class User
         $email = $this->getEmail();
         $password = $this->getPassword();
         $dbConnection = (new Connection())->getConnection();
-        $message = ''; // Initialisez le message d'erreur
+        $message = ''; 
     
         if ($dbConnection) {
             try {
@@ -167,7 +167,6 @@ class User
                     $user = $result->fetch_assoc();
     
                     if (password_verify($password, $user['password'])) {
-                        // Gestion des sessions
                         session_start();
                         $_SESSION['user_id'] = $user['user_id'];
                         $_SESSION['username'] = $user['username'];
@@ -181,7 +180,6 @@ class User
                             header("Location: ../EnseignantPages/DashboardEnseignant.php");
                             exit();
                         } elseif ($user['role'] == 'enseignant' && $user['status'] != 'active') {
-                            // Enregistrez un message d'erreur
                             $message = "Attendez l'activation de votre compte.";
                         } else {
                             header("Location: ../EtudiantPages/DashboardEtudiant.php");
@@ -202,7 +200,7 @@ class User
             $message = "Connexion à la base de données impossible.";
         }
     
-        return $message; // Retournez le message d'erreur
+        return $message; 
     }
     
 }

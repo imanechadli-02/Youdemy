@@ -2,87 +2,38 @@
 
 require_once '../config/config.php';
 
-class Tags{
+class Tags {
     private $dbConnection;
-    
-    public function __construct()
-    {
+
+    public function __construct() {
         $this->dbConnection = (new Connection)->getConnection();
-        if(!$this->dbConnection){
-            die ("error de connection a la base de donnes"); 
+        if (!$this->dbConnection) {
+            die("Error de connection à la base de données");
         }
     }
 
-    public function ajouterTags($data){
+    public function addTag() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_modify_tag'])) {
+            $name_tags = trim($_POST['tag_name_input']);
+            $tags = array_map('trim', explode(',', $name_tags));
 
-        
-        $lines = explode("\n", trim($data)); // Divise les données en lignes
-        $values = [];
-
-        foreach ($lines as $line) {
-            // Divise chaque ligne par des virgules
-            $fields = explode(",", trim($line));
-
-            if (count($fields) === 1) {
-                $name = $this->dbConnection->real_escape_string(trim($fields[0]));
-             
-                $values[] = "('$name')";
+            foreach ($tags as $tag) {
+                if (!empty($tag)) {
+                    $tagModel = new TagModel($this->dbConnection);
+                    $tagModel->addTag($tag);
+                }
             }
         }
-
-        if (!empty($values)) {
-            // Crée et exécute la requête d'insertion en masse
-            $query = "INSERT INTO tags (name) VALUES " . implode(", ", $values);
-            if ($this->dbConnection->query($query) === TRUE) {
-                return "Produits insérés avec succès !";
-            } else {
-                return "Erreur lors de l'insertion : " . $this->dbConnection->error;
-            }
-        }
-
-        return "Aucune donnée valide à insérer.";
+        header('Location: /admin/tags');
+        exit();
     }
 
-    public function afficherTag()
-    {
-        $query = "SELECT * FROM tags ";
+    public function afficherTag() {
+        $query = "SELECT * FROM tags";
         $stmt = $this->dbConnection->prepare($query);
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
-
-
-
-
-
-
-
-
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
 
 ?>

@@ -3,6 +3,11 @@ require_once '../config/config.php';
 require_once '../classes/UserClass.php';
 
 session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    header('Location: ../templates/signIn.php');
+    exit();
+}
+
 ?>
 
 <!DOCTYPE html>

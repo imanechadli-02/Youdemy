@@ -5,7 +5,6 @@ class Categorie
 
     public function __construct()
     {
-        // Initialise la connexion à la base de données
         $this->dbConnection = (new Connection)->getConnection();
         if (!$this->dbConnection) {
             die("Erreur de connexion à la base de données.");

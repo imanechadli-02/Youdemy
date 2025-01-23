@@ -4,6 +4,13 @@ require_once '../classes/UserClass.php';
 require_once '../classes/classCategorie.php';
 
 session_start();
+
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    header('Location: ../templates/signIn.php');
+    exit();
+}
+
+
 $categorie = new Categorie();
 $categoris = $categorie->afficherCategories();
 
@@ -19,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header('location: categories.php');
         }
     } else {
-        // Optionally add an error message here for empty category name
         echo "<p class='text-red-500'>Category name cannot be empty</p>";
     }
 }

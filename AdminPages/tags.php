@@ -7,23 +7,19 @@ require_once '../classes/classTags.php';
 
 
 
-// require_once 'MassInserter.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($_POST['data'])) {
         $data = $_POST['data'];
 
-        // Configurer la connexion à la base de données
         $host = "localhost";
         $user = "root";
         $password = "";
         $database = "test_db";
 
-        // Instancier la classe et insérer les données
         $inserter = new tags();
         $result = $inserter->ajouterTags($data);
 
-        // Afficher le résultat
         echo $result;
     } else {
         echo "Veuillez remplir le champ avec les données.";

@@ -8,12 +8,10 @@ require_once '../classes/classCoursText.php';
 
 session_start();
 
-// // Check if user is logged in and is teacher
-// if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
-//     header('Location: ../login.php');
-//     exit();
-// }
-
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'enseignant') {
+    header('Location: ../templates/signIn.php');
+    exit();
+}
 $categoryObj = new Categorie();
 $categories = $categoryObj->afficherCategories();
 
@@ -21,19 +19,16 @@ $tagsObj = new Tags();
 $tags = $tagsObj->afficherTag();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Créer une instance de CoursText
     $coursText = new CoursText();
 
-    // Récupérer les données envoyées depuis le formulaire
     $coursText->setTitre($_POST['title']);
     $coursText->setDescription($_POST['description']);
     $coursText->setImage($_POST['image']);
     $coursText->setContentText($_POST['content']);
     $coursText->setTagId($_POST['tag']);
     $coursText->setCategorieId($_POST['category']);
-    $coursText->setEnseignantId($_SESSION['user_id']);  // Assurez-vous d'avoir un ID utilisateur valide
+    $coursText->setEnseignantId($_SESSION['user_id']);  
 
-    // Appeler la méthode ajouterCours pour insérer les données dans la base
     $coursText->ajouterCours();
 }
 ?>
@@ -204,19 +199,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </main>
 
     <script>
-        // Preview image before upload
         document.getElementById('image').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    // You can add preview functionality here
                 };
                 reader.readAsDataURL(file);
             }
         });
 
-        // Handle drag and drop
         const dropzone = document.querySelector('.border-dashed');
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             dropzone.addEventListener(eventName, preventDefaults, false);

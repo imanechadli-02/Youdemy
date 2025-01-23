@@ -6,53 +6,49 @@ require_once '../classes/classTags.php';
 
 session_start();
 
-// Ensure the course_id is set in the session before accessing this page
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'enseignant') {
+    header('Location: ../templates/signIn.php');
+    exit();
+}
+
 if (!isset($_SESSION['course_id'])) {
     echo "Course ID is not set.";
     exit;
 } else {
-    echo "Course ID: " . $_SESSION['course_id']; // Debugging output
+    echo "Course ID: " . $_SESSION['course_id'];
 }
 
-// Initialize classes for categories and tags
 $categoryObj = new Categorie();
 $categories = $categoryObj->afficherCategories();
 
 $tagsObj = new Tags();
 $tags = $tagsObj->afficherTag();
 
-// Get the course_id from the session
 $id = $_SESSION['course_id'];
 
-// Create an instance of the Cours class
 $cours = new Cours();
 
 $course = $cours->getCourseById($id);
 
 if ($course) {
-    // Fill in the course data
     $title = $course['titre'];
     $description = $course['description'];
     $image = $course['image'];
     $content = $course['content_text'];
 } else {
-    echo "Course not found. ID: $id"; // Debugging output
+    echo "Course not found. ID: $id";
     exit;
 }
 
-// Handle the form submission to update the course
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_cours'])) {
-    // Get the form data
     $newTitle = $_POST['title'];
     $newDescription = $_POST['description'];
     $newImage = $_POST['image'];
     $newContent = $_POST['content'];
     $newCategory = $_POST['category'];
-    $newTags = 'here'; // Assuming multiple tags are selected as single selection
+    $newTags = 'here';
 
-    // Update the course in the database
     if ($cours->updateCourse($id, $newTitle, $newDescription, $newImage, $newContent, $newCategory, $newTags)) {
-        // Redirect to the course list page after successful update
         header("Location: mesCours.php");
         exit;
     } else {

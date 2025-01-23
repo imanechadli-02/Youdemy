@@ -16,7 +16,7 @@ class CoursVideo extends Cours
         $tag_id = $this->getTagId();
         $categorie_id = $this->getCategorieId();
         $enseignant_id = $this->getEnseignantId();
-        $type = 'video'; // Définir explicitement le type
+        $type = 'video'; 
     
         $dbConnection = (new Connection())->getConnection();
     
@@ -58,7 +58,7 @@ class CoursVideo extends Cours
             die("Erreur lors de la préparation de la requête : " . $dbConnection->error);
         }
     
-        $stmt->bind_param("i", $_SESSION['cours_id']); // "i" pour un entier
+        $stmt->bind_param("i", $_SESSION['cours_id']); 
         $stmt->execute();
     
         $result = $stmt->get_result();

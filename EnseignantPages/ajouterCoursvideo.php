@@ -8,11 +8,11 @@ require_once '../classes/classCoursVideo.php';
 
 session_start();
 
-// // Check if user is logged in and is teacher
-// if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
-//     header('Location: ../login.php');
-//     exit();
-// }
+// Check if user is logged in and is teacher
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'enseignant') {
+    header('Location: ../templates/signIn.php');
+    exit();
+}
 
 $categoryObj = new Categorie();
 $categories = $categoryObj->afficherCategories();

@@ -8,6 +8,12 @@ require_once '../classes/classCoursVideo.php';
 
 session_start();
 
+
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'etudiant') {
+    header('Location: ../templates/signIn.php');
+    exit();
+}
+
 // echo  $_SESSION['type_content'];
 // echo $_SESSION['cours_id'] ;
 

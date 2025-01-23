@@ -58,7 +58,7 @@ class CoursText extends Cours
             die("Erreur lors de la préparation de la requête : " . $dbConnection->error);
         }
 
-        $stmt->bind_param("i", $_SESSION['cours_id']); // "i" pour un entier
+        $stmt->bind_param("i", $_SESSION['cours_id']); 
         $stmt->execute();
 
         $result = $stmt->get_result();

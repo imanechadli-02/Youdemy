@@ -5,6 +5,11 @@ require_once '../config/config.php';
 require_once '../classes/classCours.php';
 session_start();
 
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'etudiant') {
+    header('Location: ../templates/signIn.php');
+    exit();
+}
+
 $cour = new Cours();
 $cours = $cour->afficherToutCardCours();
 
@@ -16,21 +21,18 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['details_btn'])) {
 
 
 if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['enroll_btn'])) {
-    $userId = $_SESSION['user_id'];  // ID de l'utilisateur
-    $coursId = $_POST['enroll_btn'];  // ID du cours
+    $userId = $_SESSION['user_id'];  
+    $coursId = $_POST['enroll_btn'];  
 
 
 
-    // Debugging output
     echo "User ID: " . htmlspecialchars($userId) . "<br>";
     echo "Course ID: " . htmlspecialchars($coursId) . "<br>";
 
-    // Appel de la fonction pour ajouter le cours à l'utilisateur
     $coursObj = new Cours();
     $coursObj->AjoutermesCours($userId, $coursId);
 
     echo "<script>alert('Vous avez été inscrit avec succès au cours !');</script>";
-    // Rediriger vers la page des cours ou une autre page pertinente après l'inscription
     header("Location: DashboardEtudiant.php");
     exit();
 }
@@ -223,7 +225,20 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['enroll_btn'])) {
                         </div>
                         <!-- </a> -->
                     <?php endforeach ?>
+                    <!-- Pagination -->
+                    <!-- <div class="mt-8 flex justify-center gap-4">
+                        <?php if ($page > 1): ?>
+                            <a href="?page=<?php echo $page - 1; ?>" class="bg-indigo-500 text-white py-2 px-4 rounded-lg">Previous</a>
+                        <?php endif; ?>
 
+                        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                            <a href="?page=<?php echo $i; ?>" class="bg-indigo-500 text-white py-2 px-4 rounded-lg <?php echo ($i == $page) ? 'bg-indigo-600' : ''; ?>"><?php echo $i; ?></a>
+                        <?php endfor; ?>
+
+                        <?php if ($page < $totalPages): ?>
+                            <a href="?page=<?php echo $page + 1; ?>" class="bg-indigo-500 text-white py-2 px-4 rounded-lg">Next</a>
+                        <?php endif; ?>
+                    </div> -->
                     <!-- Répétez la carte de cours pour plus de cours -->
                 </div>
             </div>
